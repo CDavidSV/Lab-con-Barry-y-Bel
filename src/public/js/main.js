@@ -1,5 +1,5 @@
 const loginBtn = document.querySelector('.btn');
-const email = document.querySelector('input[type="email"]');
+const email = document.querySelector('#email');
 
 loginBtn.addEventListener('click', login);
 
