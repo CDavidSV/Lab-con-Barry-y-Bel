@@ -9,7 +9,7 @@ router.get('/', (req: express.Request, res: express.Response, next: express.Next
 
     res.redirect('/login');
 }, (req: express.Request, res: express.Response) => {
-    res.send({status: 'Logged in'})
+    res.sendFile(path.join(__dirname, '../public/alumno.html'));
 });
 
 export default router;

@@ -29,16 +29,18 @@ router.get('/', (req: express.Request, res: express.Response) => {
 });
 
 // Receive credentials and log in.
-router.post('/', passport.authenticate('local'), (req, res) => {
-    if (req.isAuthenticated()) {
-        // User is authenticated and validated
-        res.redirect('/alumno');
-    } else {
-        // Authentication failed
-        res.send({ status: 'failed', title: 'Incorrect credentials' });
-    }
-
-    console.log(req.user);
-  });
+router.post('/', (req, res) => {
+    passport.authenticate('local', (err: any, user: any, info: any) => {
+        if (!user) {
+            // Authentication failed
+            return res.send({ status: 'failed', message: 'Correo o contraseña incorrectos' });
+        }
+        // Manually perform login
+        req.logIn(user, (err) => {
+            // User is authenticated and validated
+            return res.send({ status: 'success' });
+        });
+    })(req, res);
+});
 
 export default router;

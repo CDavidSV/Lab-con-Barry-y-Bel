@@ -21,7 +21,8 @@
         <div class="login">
             <h1 class="text-center">Bienvenido(a)</h1>
 
-            <form class="needs-validation" action="/login" method="post">
+            <form class="needs-validation" action="/login" onsubmit="event.preventDefault()">
+                <p style="color: red;" class="error-msg"></p>
                 <div class="form-group">
                     <label class="form-label" for="email">Correo Electrónico</label>
                     <input class="form-control" type="email" id="email" name="username" required>
@@ -40,7 +41,7 @@
                     <label class="form-check-label" for="check">Recuérdame</label>
                 </div>
 
-                <input class="btn w-100 btn-primary" type="submit" value="INICIAR SESIÓN">
+                <button class="btn w-100 btn-primary" onclick="login()">INICIAR SESIÓN</button>
                 <p>¿No tienes una cuenta? <a href="">Crea una</a></p>
             </form> 
         </div>
