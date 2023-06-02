@@ -10,6 +10,7 @@ const secret = "O2TsCpfRNb9yhwPjFnLJ";
 // Routes
 import loginRoute from "./routes/login";
 import alumnoRoute from "./routes/alumno";
+import maestroRoute from "./routes/maestro";
 import apiRoute from "./routes/api";
 
 // Config
@@ -33,6 +34,7 @@ app.use(passport.session());
 // Endpoints.
 app.use('/login', loginRoute);
 app.use('/alumno', alumnoRoute);
+app.use('/maestro', maestroRoute);
 app.use('/api', apiRoute);
 
 app.get('/', (req: express.Request, res: express.Response) => {
