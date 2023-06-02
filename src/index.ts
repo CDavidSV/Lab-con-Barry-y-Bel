@@ -10,6 +10,7 @@ const secret = "O2TsCpfRNb9yhwPjFnLJ";
 // Routes
 import loginRoute from "./routes/login";
 import alumnoRoute from "./routes/alumno";
+import apiRoute from "./routes/api";
 
 // Config
 colors.enable();
@@ -32,6 +33,7 @@ app.use(passport.session());
 // Endpoints.
 app.use('/login', loginRoute);
 app.use('/alumno', alumnoRoute);
+app.use('/api', apiRoute);
 
 app.get('/', (req: express.Request, res: express.Response) => {
     // Send main page.

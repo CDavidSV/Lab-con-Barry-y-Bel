@@ -29,7 +29,7 @@ router.get('/', (req: express.Request, res: express.Response) => {
 });
 
 // Receive credentials and log in.
-router.post('/', (req, res) => {
+router.post('/', (req: express.Request, res: express.Response) => {
     passport.authenticate('local', (err: any, user: any, info: any) => {
         if (!user) {
             // Authentication failed
