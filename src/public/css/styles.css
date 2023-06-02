@@ -250,6 +250,25 @@ body {
     height: 1px;
 }
 
+.progress {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 40px;
+}
+
+.progress-bar-back {
+    overflow: hidden;
+    background-color: #C1C1C1;
+    border-radius: 20px;
+    height: 10px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 70%;
+    background-color: #04C900;
+}
+
 @media (max-width: 900px) {
     .login-container {
         flex-direction: column;
