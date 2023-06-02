@@ -11,6 +11,9 @@ passport.use(new Strategy((username, password, done) => {
     if (username === "testuser@testemail.com" && password === "1234") {
         return done(null, { matricula: 'A00123456', nombre: "Carlos", apellidoPaterno: 'Sandoval', apellidoMaterno: 'Vargas', correo: 'A00123456@testemail.com', progreso: 60 } as Estudiante);
     }
+    if (username === "maestro@mail.com" && password === "4321") {
+        return done(null, { matricula: 'L01281809', nombre: "Maestro", apellidoPaterno: 'Primero', apellidoMaterno: 'Segundo', correo: 'maestro@mail.com' } as Maestro);
+    }
     // Credentials are incorrect or user does not exist.
     done(null, false);
 }));

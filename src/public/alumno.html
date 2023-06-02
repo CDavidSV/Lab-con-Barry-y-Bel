@@ -29,8 +29,18 @@
             <div class="menu-header">
                 <span style="color: #7D84CC; font-size: 180px;" class="material-icons">account_circle</span>
                 <h2 class="student-name">Nombre del Alumno</h2>
-                <h2 class="student-id">Matrícula del Alumno</h2>
+                <h2 class="student-id" id="variable"></h2> <!-- Cambio realizado aquí -->
             </div>
+            
+            <script>
+                // Obtener el valor almacenado en localStorage
+                var miVariable = localStorage.getItem('miVariable');
+            
+                // Utilizar el valor en el HTML
+                document.getElementById('variable').textContent = miVariable;
+            </script>
+            
+
             <div class="progress">
                 <div style="display: flex; justify-content: space-between; padding: 5px;">
                     <p style="font-size: 18px;">Progreso</p>

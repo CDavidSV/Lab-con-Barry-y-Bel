@@ -29,8 +29,18 @@
             <div class="menu-header">
                 <span style="color: #7D84CC; font-size: 180px;" class="material-icons">account_circle</span>
                 <h2 class="student-name">Nombre del Profesor</h2>
-                <h2 class="student-id">Matrícula del Profesor</h2>
+                <h2 class="student-id" id="variable"></h2> <!-- Cambio realizado aquí -->
             </div>
+            
+            <script>
+                // Obtener el valor almacenado en localStorage
+                var miVariable = localStorage.getItem('miVariable');
+            
+                // Utilizar el valor en el HTML
+                document.getElementById('variable').textContent = miVariable;
+            </script>
+
+            
             <div class="menu-options-container">
                 <div id="juego" class="menu-option selected" onclick="handleTabs(event)">
                     <p class="menu-option-title">Alumnos</p>

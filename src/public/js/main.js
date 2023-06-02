@@ -7,6 +7,13 @@ function login() {
     const passwordInput = document.querySelector('#password');
     const error = document.querySelector('.error-msg');
 
+    const emailValue = emailInput.value;
+
+    // Eliminar texto después de '@' y convertir en mayúsculas
+    const emailWithoutDomain = emailValue.split('@').shift().toUpperCase();
+
+    localStorage.setItem('miVariable', emailWithoutDomain);
+
     const validEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
     // Validate email address.
@@ -29,8 +36,15 @@ function login() {
     .then(data => {
         if (data.message) {
             error.innerText = data.message;
-        } else {
+        } else if (emailInput.value === "testuser@testemail.com") {
+            // Email de alumno -> redirecciona al menú de alumnos
             window.location.href = '/alumno';
+        } else if (emailInput.value === "maestro@mail.com") {
+            // Email de maestro -> redirecciona al menú de maestros
+            window.location.href = '/maestro';
+        } else {
+            // Email incorrecto.
+            error.innerText = "Invalid email or password.";
         }
     })
     .catch(error => {
