@@ -40,6 +40,21 @@ app.get('/', (req: express.Request, res: express.Response) => {
     res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
+app.get('/logout', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (req.isAuthenticated()) return next();
+
+    res.send({ status: "failed", message: "Unauthorized" });
+}, (req: express.Request, res: express.Response) => {
+    // Clear session-related data on the server
+    req.session.destroy((err) => {
+        if (err) {
+            res.status(500).send({ status: "failed", message: "Error clearing session" });
+        } else {
+            res.send({ status: "success", message: "Logout successful" });
+        }
+    });
+});
+
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`.green)
 });
