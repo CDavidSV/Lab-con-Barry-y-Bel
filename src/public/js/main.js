@@ -6,7 +6,8 @@ function login() {
     const emailInput = document.querySelector('#email');
     const passwordInput = document.querySelector('#password');
     const error = document.querySelector('.error-msg');
-
+    console.log(emailInput.value)
+    console.log(passwordInput.value)
     const emailValue = emailInput.value;
 
     // Eliminar texto después de '@' y convertir en mayúsculas
@@ -39,24 +40,27 @@ function login() {
     .then(data => {
         if (data.message) {
             error.innerText = data.message;
-        } else if (emailInput.value === "testuser@testemail.com") {
-            // Email de alumno -> redirecciona al menú de alumnos
-            localStorage.setItem('nombre', data.nombre);
-            localStorage.setItem('apellidoPaterno', data.apellidoPaterno);
-            localStorage.setItem('apellidoMaterno', data.apellidoMaterno);
-            window.location.href = '/alumno';
-
-        } else if (emailInput.value === "maestro@mail.com") {
-            // Email de maestro -> redirecciona al menú de maestros
-            localStorage.setItem('nombre', data.nombre);
-            localStorage.setItem('apellidoPaterno', data.apellidoPaterno);
-            localStorage.setItem('apellidoMaterno', data.apellidoMaterno);
-            window.location.href = '/maestro';
-
-        } else {
-            // Email incorrecto.
-            error.innerText = "Invalid email or password.";
+            return;
         }
+        // } else if (emailInput.value === "testuser@testemail.com") {
+        //     // Email de alumno -> redirecciona al menú de alumnos
+        //     localStorage.setItem('nombre', data.nombre);
+        //     localStorage.setItem('apellidoPaterno', data.apellidoPaterno);
+        //     localStorage.setItem('apellidoMaterno', data.apellidoMaterno);
+        //     window.location.href = '/alumno';
+
+        // } else if (emailInput.value === "maestro@mail.com") {
+        //     // Email de maestro -> redirecciona al menú de maestros
+        //     localStorage.setItem('nombre', data.nombre);
+        //     localStorage.setItem('apellidoPaterno', data.apellidoPaterno);
+        //     localStorage.setItem('apellidoMaterno', data.apellidoMaterno);
+        //     window.location.href = '/maestro';
+
+        // } else {
+        //     // Email incorrecto.
+        //     error.innerText = "Invalid email or password.";
+        // }
+        window.location.href = '/alumno';
     })
     .catch(error => {
         console.error('Error:', error);

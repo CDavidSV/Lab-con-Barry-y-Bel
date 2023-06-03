@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import colors from "colors";
 import path from "path";
+import connectToDB from "./dboperation";
 
 const secret = "O2TsCpfRNb9yhwPjFnLJ";
 
@@ -37,6 +38,9 @@ app.use('/alumno', alumnoRoute);
 app.use('/maestro', maestroRoute);
 app.use('/api', apiRoute);
 
+// Connect to db.
+const pool = connectToDB().then((pool) => pool);
+
 app.get('/', (req: express.Request, res: express.Response) => {
     // Send main page.
     res.sendFile(path.join(__dirname, '../public/index.html'));
@@ -60,3 +64,5 @@ app.get('/logout', (req: express.Request, res: express.Response, next: express.N
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`.green)
 });
+
+export default pool;

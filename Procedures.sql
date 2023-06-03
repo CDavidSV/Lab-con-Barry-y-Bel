@@ -1,12 +1,31 @@
-CREATE PROCEDURE ObtenerTodosLosEstudiantes
+CREATE PROCEDURE ObtenerDatoEstudiante
+@email char(60),
+@password char(15)
 AS
 BEGIN
-    SELECT *
+	SELECT * FROM Estudiante WHERE Correo = @email AND CodigoAcceso = @password
+END
+GO
+
+CREATE PROCEDURE ObtenerDatoMaestro
+@email char(60),
+@password char(15)
+AS
+BEGIN
+	SELECT * FROM Maestro WHERE Correo = @email AND CodigoAcceso = @password
+END
+GO
+
+CREATE PROCEDURE ObtenerTodosLosEstudiantes
+@limit INT
+AS
+BEGIN
+    SELECT TOP (@limit) *
     FROM Estudiante
 END
 GO
 
-CREATE PROCEDURE ObtenerCertificados
+CREATE PROCEDURE ObtenerCertificado
 @Matricula INT
 AS
 BEGIN
