@@ -38,7 +38,7 @@ router.post('/updatealumno/progress', (req: express.Request, res: express.Respon
     res.send({ state: "success" });
 });
 
-// Atualiza el estado de un minijuego para un alumno. Requiere el id del alumno y el id para el minijuego.
+// Atualiza el estado de un minijuego para un alumno. Requiere el id del alumno, el id para el minijuego y el estado.
 router.post('/updateminijuegos/state', (req: express.Request, res: express.Response) => {
     res.send({ state: "success" });
 });

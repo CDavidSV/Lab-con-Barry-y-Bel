@@ -60,13 +60,109 @@
         </div>
 
         <!-- Content area -->
-        <div id="juego-tab" class="content-area-container active">
-                <img class="logo-alumno" src="./assets/logos/Logo_final.PNG" alt="logo">
-                <img class="btn-start" src="./assets/buttons/botón blanco.png" alt="start-btn">
+        <div id="alumnos-tab" class="content-area-container active">
+            <h1 class="tab-title">Estado De Alumnos</h1>
+            <div class="alumnos-container">
+                <ul>
+                    <li class="alumno" onclick="openModal(event)">
+                        <p>Nombre | Matrícula</p>
+                        <p>Progreso</p>
+                    </li>
+                    <li class="alumno">
+                        <p>Nombre | Matrícula</p>
+                        <p>Progreso</p>
+                    </li>
+                    <li class="alumno">
+                        <p>Nombre | Matrícula</p>
+                        <p>Progreso</p>
+                    </li>
+                    <li class="alumno">
+                        <p>Nombre | Matrícula</p>
+                        <p>Progreso</p>
+                    </li>
+                    <li class="alumno">
+                        <p>Nombre | Matrícula</p>
+                        <p>Progreso</p>
+                    </li>
+                    <li class="alumno">
+                        <p>Nombre | Matrícula</p>
+                        <p>Progreso</p>
+                    </li>
+                    <li class="alumno">
+                        <p>Nombre | Matrícula</p>
+                        <p>Progreso</p>
+                    </li>
+                    <li class="alumno">
+                        <p>Nombre | Matrícula</p>
+                        <p>Progreso</p>
+                    </li>
+                    <li class="alumno">
+                        <p>Nombre | Matrícula</p>
+                        <p>Progreso</p>
+                    </li>
+                    <li class="alumno">
+                        <p>Nombre | Matrícula</p>
+                        <p>Progreso</p>
+                    </li>
+                    <li class="alumno">
+                        <p>Nombre | Matrícula</p>
+                        <p>Progreso</p>
+                    </li>
+                    <li class="alumno">
+                        <p>Nombre | Matrícula</p>
+                        <p>Progreso</p>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div id="certificado-tab" class="content-area-container">
-            <img class="certificado" class="certificado" src="./assets/Diploma-barry bel.png" alt="certificado">
+        <div class="modal" id="modal">
+            <div style="padding: 20px; width: 100%;">
+                <button style="color: black; display: flex;margin-left: auto;margin-right: 10px;" class="close-modal-btn" onclick="closeModal()"><span class="material-icons">close</span></button>
+            </div>
+            <div class="modal-header">
+                <span style="color: #7D84CC; font-size: 180px;" class="material-icons">account_circle</span>
+                <h2 class="student-name">Nombre del Profesor</h2>
+                <h2 class="student-id">Matrícula</h2>
+            </div>
+            <div class="modal-body">
+                <div class="progress">
+                    <div style="display: flex; justify-content: space-between; padding: 5px;">
+                        <p style="font-size: 18px;">Progreso</p>
+                        <p class="progress-percentage" style="font-size: 18px;">70%</p>
+                    </div>
+                    <div class="progress-bar-back">
+                        <div class="progress-bar"></div>
+                    </div>
+                </div>
+                <div class="info-alumno">
+                    <div style="width: 50%;"  class="info-col1">
+                        <p  class="info-title">Minijuegos Completados</p>
+                        <div class="minijuegos-list">
+                            <ul>
+                                <li class="minijuego">
+                                    <p>Minijuego Nombre</p>
+                                    <p>Estado</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="info-col2">
+                        <div style="margin-bottom: 15px;">
+                            <p class="info-title">Estado</p>
+                            <p>Estado Actual</p>
+                        </div>
+                        <div>
+                            <p class="info-title">Certificado</p>
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <button class="certificado-btn">Visualizar</button>
+                                <button class="download-btn"><span style="padding: 0; font-size: medium;" class="material-icons">download</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        <div id="overlay"></div>
     </div>
     </div>
 </body>
