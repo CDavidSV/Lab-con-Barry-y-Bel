@@ -119,3 +119,23 @@ function logout() {
       console.log(error);
     });
 }
+
+// Opens a modal and displays relevant information.
+function openModal(e) {
+    const modal = document.querySelector('.modal');
+    const overlay = document.querySelector('#overlay');
+
+    const modalId = e.target.id;
+
+    modal.classList.add('active');
+    overlay.classList.add('active');
+}
+
+// Closes the active modal.
+function closeModal() { 
+    const modal = document.querySelector('.modal');
+    const overlay = document.querySelector('#overlay');
+
+    modal.classList.remove('active');
+    overlay.classList.remove('active');
+}
