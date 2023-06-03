@@ -12,7 +12,10 @@ function login() {
     // Eliminar texto después de '@' y convertir en mayúsculas
     const emailWithoutDomain = emailValue.split('@').shift().toUpperCase();
 
-    localStorage.setItem('miVariable', emailWithoutDomain);
+    const nombreCompleto = 'Nombre';
+
+    localStorage.setItem('matricula', emailWithoutDomain);
+    localStorage.setItem('nombreCompleto', nombreCompleto);
 
     const validEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
@@ -38,10 +41,18 @@ function login() {
             error.innerText = data.message;
         } else if (emailInput.value === "testuser@testemail.com") {
             // Email de alumno -> redirecciona al menú de alumnos
+            localStorage.setItem('nombre', data.nombre);
+            localStorage.setItem('apellidoPaterno', data.apellidoPaterno);
+            localStorage.setItem('apellidoMaterno', data.apellidoMaterno);
             window.location.href = '/alumno';
+
         } else if (emailInput.value === "maestro@mail.com") {
             // Email de maestro -> redirecciona al menú de maestros
+            localStorage.setItem('nombre', data.nombre);
+            localStorage.setItem('apellidoPaterno', data.apellidoPaterno);
+            localStorage.setItem('apellidoMaterno', data.apellidoMaterno);
             window.location.href = '/maestro';
+
         } else {
             // Email incorrecto.
             error.innerText = "Invalid email or password.";

@@ -41,7 +41,8 @@ router.post('/', (req: express.Request, res: express.Response) => {
         // Manually perform login
         req.logIn(user, (err) => {
             // User is authenticated and validated
-            return res.send({ status: 'success' });
+            const { nombre, apellidoPaterno, apellidoMaterno } = user;
+            return res.send({ status: 'success', nombre, apellidoPaterno, apellidoMaterno });
         });
     })(req, res);
 });
