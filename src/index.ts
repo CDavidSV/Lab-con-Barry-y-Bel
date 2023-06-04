@@ -6,13 +6,13 @@ import colors from "colors";
 import path from "path";
 import connectToDB from "./dboperation";
 
-const secret = "O2TsCpfRNb9yhwPjFnLJ";
-
 // Routes
 import loginRoute from "./routes/login";
 import alumnoRoute from "./routes/alumno";
 import maestroRoute from "./routes/maestro";
 import apiRoute from "./routes/api";
+
+const secret = "O2TsCpfRNb9yhwPjFnLJ";
 
 // Config
 colors.enable();

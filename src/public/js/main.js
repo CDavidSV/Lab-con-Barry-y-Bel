@@ -42,25 +42,13 @@ function login() {
             error.innerText = data.message;
             return;
         }
-        // } else if (emailInput.value === "testuser@testemail.com") {
-        //     // Email de alumno -> redirecciona al menú de alumnos
-        //     localStorage.setItem('nombre', data.nombre);
-        //     localStorage.setItem('apellidoPaterno', data.apellidoPaterno);
-        //     localStorage.setItem('apellidoMaterno', data.apellidoMaterno);
-        //     window.location.href = '/alumno';
-
-        // } else if (emailInput.value === "maestro@mail.com") {
-        //     // Email de maestro -> redirecciona al menú de maestros
-        //     localStorage.setItem('nombre', data.nombre);
-        //     localStorage.setItem('apellidoPaterno', data.apellidoPaterno);
-        //     localStorage.setItem('apellidoMaterno', data.apellidoMaterno);
-        //     window.location.href = '/maestro';
-
-        // } else {
-        //     // Email incorrecto.
-        //     error.innerText = "Invalid email or password.";
-        // }
-        window.location.href = '/alumno';
+        console.log(data);
+        if (data.user.matricula.toLowerCase().startsWith('l0')) {
+            window.location.href = '/maestro';
+        } else {
+            window.location.href = '/alumno';
+        }
+        localStorage.setItem('user', JSON.stringify(data.user));
     })
     .catch(error => {
         console.error('Error:', error);
@@ -121,6 +109,9 @@ function changeTab(tabId) {
 
 // Clear session data and redirect to login page.
 function logout() {
+    // Remove user data from local storage.
+    localStorage.removeItem('user');
+
     fetch(`${apiURL}/logout`, { method: 'GET' })
     .then(response => response.json())
     .then((response) => {

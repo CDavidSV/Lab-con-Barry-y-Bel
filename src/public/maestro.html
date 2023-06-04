@@ -28,8 +28,8 @@
             </div>
             <div class="menu-header">
                 <span style="color: #7D84CC; font-size: 180px;" class="material-icons">account_circle</span>
-                <h2 class="user-name" id="nombreCompleto"></h2>
-                <h2 class="student-id" id="variable"></h2> <!-- Cambio realizado aquí -->
+                <h2 class="user-name"></h2>
+                <h2 class="user-id"></h2> <!-- Cambio realizado aquí -->
             </div>
             
             <script>
@@ -165,5 +165,14 @@
         <div id="overlay"></div>
     </div>
     </div>
+    <script>
+        const name = document.querySelector('.user-name');
+        const studentId = document.querySelector('.user-id');
+
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        name.innerText = `${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno}`;
+        studentId.innerText = user.matricula;
+    </script>
 </body>
 </html>

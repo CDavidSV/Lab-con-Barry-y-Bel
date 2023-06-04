@@ -215,12 +215,12 @@ body {
     background-color: #DFDFDF;
 }
 
-.student-name {
+.user-name {
     font-size: 32px;
     font-weight: bold;
 }
 
-.student-id {
+.user-id {
     font-size: 20px;
     font-weight: normal;
 }

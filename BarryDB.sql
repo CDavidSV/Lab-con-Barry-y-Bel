@@ -7,13 +7,13 @@ drop table CatalogoMinijuegos;
 
 CREATE TABLE Estudiante(
 Matricula CHAR(9) PRIMARY KEY NOT NULL, 
-Nombre VARCHAR(40) NOT NULL,
+Nombre VARCHAR(50) NOT NULL,
 ApPaterno VARCHAR(25), 
 ApMaterno VARCHAR(25),
-Correo VARCHAR(60),
-CodigoAcceso VARCHAR (15),
+Correo VARCHAR(64),
+CodigoAcceso VARCHAR (100),
 Progreso INT,
-Estatus BIT
+Estado BIT
 );
 
 CREATE TABLE CatalogoMinijuegos(
@@ -31,11 +31,11 @@ Completado BIT
 
 CREATE TABLE Maestro(
 Matricula CHAR(9) PRIMARY KEY NOT NULL,
-Nombre  VARCHAR(40) NOT NULL,
+Nombre  VARCHAR(50) NOT NULL,
 ApPaterno VARCHAR(25),
 ApMaterno VARCHAR(25),
-Correo VARCHAR(60),
-CodigoAcceso VARCHAR (15)
+Correo VARCHAR(64),
+CodigoAcceso VARCHAR (100)
 );
 
 CREATE TABLE Certificado(

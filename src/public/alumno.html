@@ -28,25 +28,9 @@
             </div>
             <div class="menu-header">
                 <span style="color: #7D84CC; font-size: 180px;" class="material-icons">account_circle</span>
-                <h2 class="student-name" id="nombreCompleto"></h2>
-                <h2 class="student-id" id="variable"></h2> <!-- Cambio realizado aquí -->
+                <h2 class="user-name"></h2>
+                <h2 class="user-id"></h2> <!-- Cambio realizado aquí -->
             </div>
-            
-            <script>
-                // Obtener el valor almacenado en localStorage
-                var matricula = localStorage.getItem('matricula');
-                var nombreCompleto = localStorage.getItem('nombreCompleto');
-                var nombre = localStorage.getItem('nombre');
-                var apellidoPaterno = localStorage.getItem('apellidoPaterno');
-                var apellidoMaterno = localStorage.getItem('apellidoMaterno');
-
-                // Utilizar los valores en el HTML
-                document.getElementById('variable').textContent = matricula;
-                document.getElementById('nombreCompleto').textContent = nombre + ' ' + apellidoPaterno + ' ' + apellidoMaterno;
-
-            </script>
-            
-
 
             <div class="progress">
                 <div style="display: flex; justify-content: space-between; padding: 5px;">
@@ -87,5 +71,21 @@
             <img class="certificado" class="certificado" src="./assets/Diploma-barry bel.png" alt="certificado">
         </div>
     </div>
+
+    <script>
+        const name = document.querySelector('.user-name');
+        const progressPercentage = document.querySelector('.progress-percentage');
+        const progressBar = document.querySelector('.progress-bar');
+        const studentId = document.querySelector('.user-id');
+
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        name.innerText = `${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno}`;
+        studentId.innerText = user.matricula;
+
+        // Set the progress bar and percentage to the user progress
+        progressPercentage.innerText = `${user.progreso}%`;
+        progressBar.style.width = `${user.progreso}%`;
+    </script>
 </body>
 </html>

@@ -1,18 +1,32 @@
-CREATE PROCEDURE ObtenerDatoEstudiante
+CREATE PROCEDURE ObtenerDatosUsuario
 @email char(60),
 @password char(15)
 AS
 BEGIN
-	SELECT * FROM Estudiante WHERE Correo = @email AND CodigoAcceso = @password
+    -- Check if the user exists in the Estudiante table
+    IF EXISTS (SELECT 1 FROM Estudiante WHERE Correo = @email AND CodigoAcceso = @password)
+    BEGIN
+        SELECT * FROM Estudiante WHERE Correo = @email AND CodigoAcceso = @password
+    END
+    ELSE
+    BEGIN
+        SELECT * FROM Maestro WHERE Correo = @email AND CodigoAcceso = @password
+    END
 END
 GO
 
-CREATE PROCEDURE ObtenerDatoMaestro
-@email char(60),
-@password char(15)
+CREATE PROCEDURE ObtenerDatosUsuarioConId
+@id char(9)
 AS
 BEGIN
-	SELECT * FROM Maestro WHERE Correo = @email AND CodigoAcceso = @password
+    IF EXISTS (SELECT 1 FROM Estudiante WHERE Matricula = @id)
+    BEGIN
+        SELECT * FROM Estudiante WHERE Matricula = @id
+    END
+    ELSE
+    BEGIN
+        SELECT * FROM Maestro WHERE Matricula = @id
+    END
 END
 GO
 

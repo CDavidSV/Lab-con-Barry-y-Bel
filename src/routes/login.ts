@@ -1,38 +1,64 @@
 import path from "path";
 import express from "express";
-import passport from "passport";
+import passport, { use } from "passport";
 import { Strategy } from "passport-local";
-import { Estudiante, Maestro } from "../../types";
+import { User } from "../../types";
 import mssql from "mssql";
 import poolPromise from "../index";
 
-
-
 const router: express.Router = express.Router();
+
+const validateUserType = (user: any): User => {
+    if (user.Matricula.toLowerCase().startsWith('l0')) {
+        return { 
+            matricula: user.Matricula, 
+            nombre: user.Nombre, 
+            apellidoPaterno: user.ApPaterno, 
+            apellidoMaterno: user.ApMaterno, 
+            correo: user.Correo, 
+        } as User;
+    } else {
+        return { 
+            matricula: user.Matricula, 
+            nombre: user.Nombre, 
+            apellidoPaterno: user.ApPaterno, 
+            apellidoMaterno: user.ApMaterno, 
+            correo: user.Correo, 
+            progreso: user.Progreso,
+            estado: user.Estado
+        } as User;
+    }
+}
 
 // Validate user login.
 passport.use(new Strategy( async (username, password, done) => {
     const pool = await poolPromise;
-    const requestAlumno = pool!.request();
-    requestAlumno.input('email', mssql.NVarChar, username);
-    requestAlumno.input('password', mssql.NVarChar, password);
+    const request = pool!.request();
+    request.input('email', mssql.NVarChar, username);
+    request.input('password', mssql.NVarChar, password);
 
-    const result = await requestAlumno.execute('ObtenerDatoEstudiante');
-
+    const result = await request.execute('ObtenerDatosUsuario');
     if (result.recordset.length < 1) {
         // Credentials are incorrect or user does not exist.
         return done(null, false);
     }
-
-    return done(null, result.recordset[0] as Estudiante | Maestro);
+    // Credentials are correct.
+    done(null, validateUserType(result.recordset[0]));
 }));
 
 passport.serializeUser((user: any, done) => {
-    done(null, user.Matricula);
+    done(null, user.matricula);
 });
 
-passport.deserializeUser((matricula, done) => {
-    done(null, { matricula: 'A00123456', nombre: "Carlos", apellidoPaterno: 'Sandoval', apellidoMaterno: 'Vargas', correo: 'A00123456@testemail.com', progreso: 60 });
+passport.deserializeUser(async (matricula, done) => {
+    const pool = await poolPromise;
+    const request = pool!.request();
+    request.input('id', mssql.NVarChar, matricula);
+
+    const result = await request.execute('ObtenerDatosUsuarioConId');
+    const user = result.recordset[0];
+
+    done(null, validateUserType(user));
 });
 
 // Send Login page.
@@ -42,16 +68,20 @@ router.get('/', (req: express.Request, res: express.Response) => {
 
 // Receive credentials and log in.
 router.post('/', (req: express.Request, res: express.Response) => {
-    passport.authenticate('local', (err: any, user: any, info: any) => {
+    passport.authenticate('local', (err: any, user: User, info: any) => {
         if (!user) {
             // Authentication failed
             return res.send({ status: 'failed', message: 'Correo o contraseña incorrectos' });
         }
         // Manually perform login
         req.logIn(user, (err) => {
-            // User is authenticated and validated
-            const { nombre, apellidoPaterno, apellidoMaterno } = user;
-            return res.send({ status: 'success', nombre, apellidoPaterno, apellidoMaterno });
+            // Check if the user is of type Maestro or Estudiante
+            if (user.matricula.toLowerCase().startsWith('l0')) {
+                // Maestro
+                return res.send({ status: 'success', user: user as User });
+            }
+            // Estudiante
+            return res.send({ status: 'success', user: user as User });
         });
     })(req, res);
 });
