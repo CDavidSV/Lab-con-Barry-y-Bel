@@ -31,24 +31,8 @@
                 <h2 class="user-name"></h2>
                 <h2 class="user-id"></h2> <!-- Cambio realizado aquí -->
             </div>
-            
-            <script>
-                // Obtener el valor almacenado en localStorage
-                var matricula = localStorage.getItem('matricula');
-                var nombreCompleto = localStorage.getItem('nombreCompleto');
-                var nombre = localStorage.getItem('nombre');
-                var apellidoPaterno = localStorage.getItem('apellidoPaterno');
-                var apellidoMaterno = localStorage.getItem('apellidoMaterno');
-
-                // Utilizar los valores en el HTML
-                document.getElementById('variable').textContent = matricula;
-                document.getElementById('nombreCompleto').textContent = nombre + ' ' + apellidoPaterno + ' ' + apellidoMaterno;
-
-            </script>
-
-            
             <div class="menu-options-container">
-                <div id="juego" class="menu-option selected" onclick="handleTabs(event)">
+                <div id="alumnos" class="menu-option selected" onclick="handleTabs(event)">
                     <p class="menu-option-title">Alumnos</p>
                 </div>
                 <span class="separator"></span>
@@ -64,54 +48,7 @@
             <h1 class="tab-title">Estado De Alumnos</h1>
             <div class="alumnos-container">
                 <ul>
-                    <li class="alumno" onclick="openModal(event)">
-                        <p>Nombre | Matrícula</p>
-                        <p>Progreso</p>
-                    </li>
-                    <li class="alumno">
-                        <p>Nombre | Matrícula</p>
-                        <p>Progreso</p>
-                    </li>
-                    <li class="alumno">
-                        <p>Nombre | Matrícula</p>
-                        <p>Progreso</p>
-                    </li>
-                    <li class="alumno">
-                        <p>Nombre | Matrícula</p>
-                        <p>Progreso</p>
-                    </li>
-                    <li class="alumno">
-                        <p>Nombre | Matrícula</p>
-                        <p>Progreso</p>
-                    </li>
-                    <li class="alumno">
-                        <p>Nombre | Matrícula</p>
-                        <p>Progreso</p>
-                    </li>
-                    <li class="alumno">
-                        <p>Nombre | Matrícula</p>
-                        <p>Progreso</p>
-                    </li>
-                    <li class="alumno">
-                        <p>Nombre | Matrícula</p>
-                        <p>Progreso</p>
-                    </li>
-                    <li class="alumno">
-                        <p>Nombre | Matrícula</p>
-                        <p>Progreso</p>
-                    </li>
-                    <li class="alumno">
-                        <p>Nombre | Matrícula</p>
-                        <p>Progreso</p>
-                    </li>
-                    <li class="alumno">
-                        <p>Nombre | Matrícula</p>
-                        <p>Progreso</p>
-                    </li>
-                    <li class="alumno">
-                        <p>Nombre | Matrícula</p>
-                        <p>Progreso</p>
-                    </li>
+                    <!-- Display general data for each Student -->
                 </ul>
             </div>
         </div>
@@ -121,8 +58,8 @@
             </div>
             <div class="modal-header">
                 <span style="color: #7D84CC; font-size: 180px;" class="material-icons">account_circle</span>
-                <h2 class="student-name">Nombre del Profesor</h2>
-                <h2 class="student-id">Matrícula</h2>
+                <h2 class="student-name">Nombre del Alumno</h2>
+                <p style="font-size: 20px;" class="student-id">Matrícula</p>
             </div>
             <div class="modal-body">
                 <div class="progress">
@@ -141,7 +78,7 @@
                             <ul>
                                 <li class="minijuego">
                                     <p>Minijuego Nombre</p>
-                                    <p>Estado</p>
+                                    <p style="font-weight: bold;">Estado</p>
                                 </li>
                             </ul>
                         </div>
@@ -149,7 +86,7 @@
                     <div class="info-col2">
                         <div style="margin-bottom: 15px;">
                             <p class="info-title">Estado</p>
-                            <p>Estado Actual</p>
+                            <p style="font-weight: bold;" class="student-state">Estado Actual</p>
                         </div>
                         <div>
                             <p class="info-title">Certificado</p>
@@ -162,7 +99,7 @@
                 </div>
             </div>
         </div>
-        <div id="overlay"></div>
+        <div id="overlay" onclick="closeModal()"></div>
     </div>
     </div>
     <script>
@@ -173,6 +110,29 @@
 
         name.innerText = `${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno}`;
         studentId.innerText = user.matricula;
+
+        // Get all users from database and store them in localStorage
+        fetch('http://localhost:3000/api/alumnos').then((response) => response.json()).then((result) => {
+            localStorage.setItem('estudiantesData', JSON.stringify(result.users));
+
+            // For each user in localStorage, create a new list item
+            const alumnosContainer = document.querySelector('.alumnos-container ul');
+            result.users.forEach((estudiante) => {
+                const alumno = document.createElement('li');
+                alumno.classList.add('alumno');
+                alumno.setAttribute('onclick', 'openModal(event)');
+                alumno.setAttribute('id', estudiante.matricula);
+                // Set the state to yello if the student state is false and green if it's true
+                const stateColor = estudiante.estado ? 'green' : 'orange';
+                const state = estudiante.estado ? 'Completado' : 'En Progreso';
+
+                alumno.innerHTML = `
+                    <p>${estudiante.nombre} ${estudiante.apellidoPaterno} ${estudiante.apellidoMaterno} | ${estudiante.matricula}</p>
+                    <p style="color: ${stateColor}; font-weight: bold;">${state}</p>
+                `;
+                alumnosContainer.appendChild(alumno);
+            });
+        });
     </script>
 </body>
 </html>

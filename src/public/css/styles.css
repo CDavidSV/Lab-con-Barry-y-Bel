@@ -309,19 +309,23 @@ body {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0);
+    transform: translate(-50%, -30%);
+    opacity: 0;
+    visibility: hidden;
     border-radius: 10px;
     z-index: 10;
     color: black;
     background-color: #D9D9D9;
     width: 900px;
     max-width: 80%;
-    transition: 0.1s ease;
+    transition: 0.3s ease;
     overflow: hidden;
 }
 
 .modal.active {
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%);
+    opacity: 1;
+    visibility: visible;
 }
 
 .modal-header {

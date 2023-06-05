@@ -6,8 +6,6 @@ function login() {
     const emailInput = document.querySelector('#email');
     const passwordInput = document.querySelector('#password');
     const error = document.querySelector('.error-msg');
-    console.log(emailInput.value)
-    console.log(passwordInput.value)
     const emailValue = emailInput.value;
 
     // Eliminar texto después de '@' y convertir en mayúsculas
@@ -87,6 +85,9 @@ function handleTabs(e) {
         case "descarga-reglas":
             // Download something.
             break;
+        case "alumnos":
+            changeTab("alumnos-tab");
+            break;
     }
 
     // Highlight the selected option.
@@ -118,11 +119,11 @@ function logout() {
       if (response.status === 'success') {
         window.location.href = '/login'; // Redirect to the login page or desired location
       } else {
-        console.log(response);
+        console.error(response);
       }
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 }
 
@@ -131,10 +132,26 @@ function openModal(e) {
     const modal = document.querySelector('.modal');
     const overlay = document.querySelector('#overlay');
 
-    const modalId = e.target.id;
+    // Get the id from the event emmiter.
+    const modalId = e.currentTarget.id
 
     modal.classList.add('active');
     overlay.classList.add('active');
+
+    // Display student information in the modal depending on the students id.
+    const studentData = JSON.parse(localStorage.getItem('estudiantesData'));
+
+    const student = studentData.find((student) => student.matricula === modalId);
+
+    // Display the student information in the modal.
+    const studentName = document.querySelector('.student-name');
+    const studentMatricula = document.querySelector('.student-id');
+    const studentState = document.querySelector('.student-state');
+
+    studentName.innerText = student.nombre + ' ' + student.apellidoPaterno + ' ' + student.apellidoMaterno;
+    studentMatricula.innerText = student.matricula;
+    studentState.innerText = student.estado ? 'Compleatado' : 'En Progreso';
+    studentState.style.color = student.estado ? 'green' : 'orange';
 }
 
 // Closes the active modal.

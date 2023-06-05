@@ -1,11 +1,34 @@
 import path from "path";
 import express from "express";
+import poolPromise from "../index";
+import { User } from "../../types";
 
 const router: express.Router = express.Router();
 
 // Retorna todos los alumnos registrados. Pide un limite.
-router.get('/alumnos', (req: express.Request, res: express.Response) => {
-    res.send({ state: "success" });
+router.get('/alumnos', async (req: express.Request, res: express.Response) => {
+    const pool = await poolPromise;
+    const request = pool!.request();
+    const result = await request.execute('ObtenerTodosLosEstudiantes');
+
+    if (result.recordset && result.recordset.length > 0) {
+        // Create an array of users returned by the database.
+        const users = result.recordset.map((user: any) => {
+            return {
+                matricula: user.Matricula,
+                nombre: user.Nombre,
+                apellidoPaterno: user.ApPaterno,
+                apellidoMaterno: user.ApMaterno,
+                correo: user.Correo,
+                progreso: user.Progreso,
+                estado: user.Estado
+            } as User;
+        });
+
+        res.send({ state: "success", size: users.length, users: users });
+    } else {
+        res.send({ state: "success", size: 0, users: [] });
+    }
 });
 
 // Retorna los datos del certificado. Requiere la matrícula del alumno.
@@ -14,7 +37,7 @@ router.get('/certificado', (req: express.Request, res: express.Response) => {
 });
 
 // Retorna los datos de un alumno. Requiere la matrícula del alumno.
-router.post('/alumno', (req: express.Request, res: express.Response) => {
+router.get('/alumno', (req: express.Request, res: express.Response) => {
     res.send({ state: "success" });
 });
 

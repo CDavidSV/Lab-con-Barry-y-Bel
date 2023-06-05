@@ -31,10 +31,9 @@ END
 GO
 
 CREATE PROCEDURE ObtenerTodosLosEstudiantes
-@limit INT
 AS
 BEGIN
-    SELECT TOP (@limit) *
+    SELECT *
     FROM Estudiante
 END
 GO
@@ -129,7 +128,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE CreateRegistrosForUser
+CREATE PROCEDURE CrearRegistrosMinijuegos
     @Matricula CHAR(9)
 AS
 BEGIN
@@ -145,13 +144,3 @@ BEGIN
 
 END
 GO
-
-CREATE PROCEDURE CredencialesProfesor
-    @Correo VARCHAR(60),
-    @CodigoAcceso VARCHAR(15)
-AS
-BEGIN
-    SELECT *
-    FROM Maestro
-    WHERE Correo = @Correo AND CodigoAcceso = @CodigoAcceso
-END
