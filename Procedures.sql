@@ -98,25 +98,28 @@ CREATE PROCEDURE ActualizarMinijuegoCompletado
 AS
 BEGIN
     -- Update the minigame state.
-    UPDATE Minijuego
-    SET Completado = 1
-    WHERE Matricula = @Matricula AND IdVideoJuego = @MinijuegoId
-
-    -- Update the student's progress.
-    DECLARE @Progreso INT
-    SET @Progreso = (SELECT Progreso FROM Estudiante WHERE Matricula = @Matricula)
-
-    IF NOT @Progreso >= (SELECT COUNT(*) FROM CatalogoMinijuegos)
+    IF EXISTS (SELECT * FROM Minijuego WHERE Matricula = @Matricula AND IdVideoJuego = @MinijuegoId)
     BEGIN
-        UPDATE Estudiante
-        SET Progreso = @Progreso + 1
-        WHERE Matricula = @Matricula
-    END
-    ELSE
-    BEGIN
-        -- Create the certificate if the student has completed all the minigames.
-        EXEC CrearCertificado @Matricula = @Matricula
-        RETURN
+        UPDATE Minijuego
+        SET Completado = 1
+        WHERE Matricula = @Matricula AND IdVideoJuego = @MinijuegoId
+   
+        -- Update the student's progress.
+        DECLARE @Progreso INT
+        SET @Progreso = (SELECT Progreso FROM Estudiante WHERE Matricula = @Matricula)
+
+        IF NOT @Progreso >= (SELECT COUNT(*) FROM CatalogoMinijuegos)
+        BEGIN
+            UPDATE Estudiante
+            SET Progreso = @Progreso + 1
+            WHERE Matricula = @Matricula
+        END
+        ELSE
+        BEGIN
+            -- Create the certificate if the student has completed all the minigames.
+            EXEC CrearCertificado @Matricula = @Matricula
+            RETURN
+        END
     END
 END
 GO
@@ -140,6 +143,7 @@ BEGIN
     SELECT *
     FROM CatalogoMinijuegos
 END
+GO
 
 CREATE PROCEDURE ObtenerMinijuego
     @MinijuegoId INT
@@ -149,3 +153,4 @@ BEGIN
     FROM CatalogoMinijuegos
     WHERE Id = @MinijuegoId
 END
+GO
