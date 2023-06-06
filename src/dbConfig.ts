@@ -1,8 +1,8 @@
 // MS SQL Config
 const config = {
-    user: "Viper",
-    password: "1234",
-    server: "VIPER-PC",
+    user: "adminlab",
+    password: "Tecate00.",
+    server: "lab-barry-bel.database.windows.net",
     database: "BarryDB",
     options: {
         trustServerCertificate: true,
@@ -11,7 +11,7 @@ const config = {
         instancename: "",
         encrypt: true 
     },
-    port: 49693
+    port: 1433
 }
 
 export default config;
