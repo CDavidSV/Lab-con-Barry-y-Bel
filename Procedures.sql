@@ -98,18 +98,6 @@ CREATE PROCEDURE ActualizarMinijuegoCompletado
     @MinijuegoId INT
 AS
 BEGIN
-    IF NOT EXISTS (SELECT * FROM Estudiante WHERE Matricula = @Matricula)
-    BEGIN
-        RAISERROR ('The student does not exist.', 16, 1)
-        RETURN
-    END
-
-    IF NOT EXISTS (SELECT * FROM CatalogoMinijuegos WHERE Id = @MinijuegoId)
-    BEGIN
-        RAISERROR ('Invalid minigame Id.', 16, 1)
-        RETURN
-    END
-
     -- Update the minigame state.
     IF EXISTS (SELECT * FROM Minijuego WHERE Matricula = @Matricula AND IdVideoJuego = @MinijuegoId)
     BEGIN
@@ -146,18 +134,6 @@ CREATE PROCEDURE ActualizarMinijuegoEmpezado
     @MinijuegoId INT
 AS
 BEGIN
-    IF NOT EXISTS (SELECT * FROM Estudiante WHERE Matricula = @Matricula)
-    BEGIN
-        RAISERROR ('The student does not exist.', 16, 1)
-        RETURN
-    END
-
-    IF NOT EXISTS (SELECT * FROM CatalogoMinijuegos WHERE Id = @MinijuegoId)
-    BEGIN
-        RAISERROR ('Invalid minigame Id.', 16, 1)
-        RETURN
-    END
-
     IF NOT EXISTS (SELECT * FROM Minijuego WHERE Matricula = @Matricula AND IdVideoJuego = @MinijuegoId)
     BEGIN
         INSERT INTO Minijuego
