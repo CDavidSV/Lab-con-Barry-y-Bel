@@ -121,52 +121,113 @@ router.get('/alumno', async (req: express.Request, res: express.Response) => {
 });
 
 // Get data for all minigames for a student
-router.get('/alumno/minijuegos', (req: express.Request, res: express.Response) => {
-    res.send({ state: "success" });
+router.get('/alumno/minijuegos', async (req: express.Request, res: express.Response) => {
+    const matricula: string = req.query.matricula as string;
+    if (!matricula) return res.status(400).send({ state: "error", message: "Missing matricula parameter." });
+    if (!validateMatricula(matricula)) return res.status(400).send({ state: "error", message: "matricula parameter is Invalid." });
+
+    try {
+        // Get students data from the database.
+        const pool = await poolPromise;
+        const request = pool!.request();
+        request.input('Matricula', mssql.NChar, matricula);
+        const result = await request.execute('ObtenerMinijuegosPorEstudiante');
+
+        if (!result.recordset || result.recordset.length < 1) {
+            return res.send({ state: "error", message: "Student not Found." });
+        }
+
+        res.send({ state: "success", minigames: result.recordset });
+        
+    } catch (error) {
+        console.error("Error retrieving student data:".red, error);
+        return res.status(500).send({ state: "error", message: "An error occurred while retrieving student." });
+    }
 });
 
 // Update the students minigame registry with the new started minigame.
-router.post('/alumno/startminigame', async (req: express.Request, res: express.Response) => {
-    const { matricula } = req.body;
-    const { minigameId } = req.body;
-    if (!minigameId || !matricula) return res.status(400).send({ state: "error", message: "Missing parameters." });
-    if (!validateMatricula(matricula)) return res.status(400).send({ state: "error", message: "matricula parameter is Invalid." });
+router.post('/alumno/comenzominijuego', async (req: express.Request, res: express.Response) => {
+    const { matricula, minigameId } = req.body;
+    if (!minigameId || !matricula) {
+      return res.status(400).send({ state: "error", message: "Missing parameters." });
+    }
+    if (!validateMatricula(matricula)) {
+      return res.status(400).send({ state: "error", message: "matricula is Invalid." });
+    }
 
     // Check if the student has started that minigame before. If not, add it to the registry as in-progress.
     try {
         const pool = await poolPromise;
+
+        const requestStudent = pool!.request();
+        const requestMinigame = pool!.request();
+        requestStudent.input('Matricula', mssql.NChar, matricula);
+        requestMinigame.input('MinijuegoId', mssql.Int, parseInt(minigameId));
+
+        const [resultStudent, resultMinigame] = await Promise.all([
+            requestStudent.execute('ObtenerEstudiante'),
+            requestMinigame.execute('ObtenerMinijuego')
+        ]);
+
+        if (resultStudent.recordset.length < 1) {
+            return res.status(400).send({ state: "error", message: "Student not Found." });
+        } else if (resultMinigame.recordset.length < 1) {
+            return res.status(400).send({ state: "error", message: "Minigame not Found." });
+        }
+
         const request = pool!.request();
         request.input('Matricula', mssql.NChar, matricula);
-
         request.input('MinijuegoId', mssql.Int, parseInt(minigameId));
         await request.execute('ActualizarMinijuegoEmpezado');
     
         res.send({ state: "success", message: "Minigame started successfully." });
     } catch (error: any) {
-        return res.status(500).send({ state: "error", error: error.originalError.message });
+        return res.status(500).send({ state: "error", message: "An error occurred while updating minigame state.", error: error.originalError });
     }
 });
 
 // Update the students minigame registry with the finished minigame.
-router.post('/alumno/finishminigame', async (req: express.Request, res: express.Response) => {
+router.post('/alumno/terminominijuego', async (req: express.Request, res: express.Response) => {
     // Get matricula and minigame id from post parameters.
-    const { matricula } = req.body;
-    const { minigameId } = req.body;
-    if (!minigameId || !matricula) return res.status(400).send({ state: "error", message: "Missing parameters." });
-    if (!validateMatricula(matricula)) return res.status(400).send({ state: "error", message: "matricula parameter is Invalid." });
-
+    const { matricula, minigameId } = req.body;
+    if (!minigameId || !matricula) {
+      return res.status(400).send({ state: "error", message: "Missing parameters." });
+    }
+    if (!validateMatricula(matricula)) {
+      return res.status(400).send({ state: "error", message: "matricula is Invalid." });
+    }
     // Check if the student has started that minigame before. If not, return an error.
-    let result: mssql.IProcedureResult<any>;
     try {
         const pool = await poolPromise;
-        const requestUpdate = pool!.request();
-        requestUpdate.input('MinijuegoId', mssql.Int, parseInt(minigameId));
-        requestUpdate.input('Matricula', mssql.NChar, matricula);
-        result = await requestUpdate.execute('ActualizarMinijuegoCompletado');
-        
+
+        const requestStudent = pool!.request();
+        const requestMinigame = pool!.request();
+        requestStudent.input('Matricula', mssql.NChar, matricula);
+        requestMinigame.input('MinijuegoId', mssql.Int, parseInt(minigameId));
+
+        const [resultStudent, resultMinigame] = await Promise.all([
+            requestStudent.execute('ObtenerEstudiante'),
+            requestMinigame.execute('ObtenerMinijuego')
+        ]);
+
+        if (resultStudent.recordset.length < 1) {
+            return res.status(400).send({ state: "error", message: "Student not Found." });
+        } else if (resultMinigame.recordset.length < 1) {
+            return res.status(400).send({ state: "error", message: "Minigame not Found." });
+        }
+
+        const request = pool!.request();
+        request.input('Matricula', mssql.NChar, matricula);
+        request.input('MinijuegoId', mssql.Int, parseInt(minigameId));
+        const result = await request.execute('ActualizarMinijuegoCompletado');
+
+        if (result.rowsAffected.length < 1) {
+            return res.status(400).send({ state: "error", message: "The student hasn't started that minigame." });
+        }
+            
         res.send({ state: "success", message: "Minigame state has been changed to completed."})
     } catch (error: any) {
-        return res.status(500).send({ state: "error", error: error.originalError.message });
+        return res.status(500).send({ state: "error", message: "An error occurred while updating minigame state.", error: error.originalError });
     }
 });
 

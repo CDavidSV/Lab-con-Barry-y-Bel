@@ -65,9 +65,8 @@ CREATE PROCEDURE ObtenerMinijuegosPorEstudiante
 AS
 BEGIN
     SELECT CatalogoMinijuegos.Nombre, Minijuego.Completado
-    FROM Minijuego
-             JOIN CatalogoMinijuegos ON Minijuego.IdVideoJuego = CatalogoMinijuegos.Id
-    WHERE Minijuego.Matricula = @Matricula
+    FROM CatalogoMinijuegos
+        LEFT JOIN Minijuego ON Minijuego.IdVideoJuego = CatalogoMinijuegos.Id AND Minijuego.Matricula = @Matricula
 END
 GO
 
@@ -99,17 +98,9 @@ CREATE PROCEDURE ActualizarMinijuegoCompletado
 AS
 BEGIN
     -- Update the minigame state.
-    IF EXISTS (SELECT * FROM Minijuego WHERE Matricula = @Matricula AND IdVideoJuego = @MinijuegoId)
-    BEGIN
-        UPDATE Minijuego
-        SET Completado = 1
-        WHERE Matricula = @Matricula AND IdVideoJuego = @MinijuegoId
-    END
-    ELSE
-    BEGIN
-        RAISERROR ('The user does has not started that minigame.', 16, 1)
-        RETURN
-    END
+    UPDATE Minijuego
+    SET Completado = 1
+    WHERE Matricula = @Matricula AND IdVideoJuego = @MinijuegoId
 
     -- Update the student's progress.
     DECLARE @Progreso INT
@@ -148,4 +139,13 @@ AS
 BEGIN
     SELECT *
     FROM CatalogoMinijuegos
+END
+
+CREATE PROCEDURE ObtenerMinijuego
+    @MinijuegoId INT
+AS
+BEGIN
+    SELECT *
+    FROM CatalogoMinijuegos
+    WHERE Id = @MinijuegoId
 END
