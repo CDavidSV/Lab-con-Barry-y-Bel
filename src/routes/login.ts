@@ -15,7 +15,8 @@ const validateUserType = (user: any): User => {
             nombre: user.Nombre, 
             apellidoPaterno: user.ApPaterno, 
             apellidoMaterno: user.ApMaterno, 
-            correo: user.Correo, 
+            correo: user.Correo,
+            campus: user.Campus,
         } as User;
     } else {
         return { 
@@ -24,6 +25,7 @@ const validateUserType = (user: any): User => {
             apellidoPaterno: user.ApPaterno, 
             apellidoMaterno: user.ApMaterno, 
             correo: user.Correo, 
+            campus: user.Campus,
             progreso: user.Progreso,
             estado: user.Estado
         } as User;
@@ -39,11 +41,18 @@ passport.use(new Strategy( async (username, password, done) => {
 
     const result = await request.execute('ObtenerDatosUsuario');
     if (result.recordset.length < 1) {
-        // Credentials are incorrect or user does not exist.
+        // User does not exist.
         return done(null, false);
     }
     // Credentials are correct.
-    done(null, validateUserType(result.recordset[0]));
+    const user = result.recordset[0];
+    if (username.toLowerCase() === user.Correo.toLowerCase() && password === user.CodigoAcceso) {
+        done(null, validateUserType(result.recordset[0]));
+    } else {
+        // Credentials are incorrect.
+        return done(null, false);
+    }
+    
 }));
 
 passport.serializeUser((user: any, done) => {

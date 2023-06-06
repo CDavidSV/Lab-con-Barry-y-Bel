@@ -4,6 +4,7 @@ export interface User {
     apellidoPaterno: string,
     apellidoMaterno: string,
     correo: string,
+    campus: string,
     progreso: number,
     estado: boolean
 }

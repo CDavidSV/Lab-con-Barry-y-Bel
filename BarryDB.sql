@@ -12,6 +12,7 @@ ApPaterno VARCHAR(25),
 ApMaterno VARCHAR(25),
 Correo VARCHAR(64),
 CodigoAcceso VARCHAR (100),
+Campus VARCHAR(25),
 Progreso INT,
 Estado BIT
 );
@@ -35,7 +36,8 @@ Nombre  VARCHAR(50) NOT NULL,
 ApPaterno VARCHAR(25),
 ApMaterno VARCHAR(25),
 Correo VARCHAR(64),
-CodigoAcceso VARCHAR (100)
+CodigoAcceso VARCHAR (100),
+Campus VARCHAR(25)
 );
 
 CREATE TABLE Certificado(
