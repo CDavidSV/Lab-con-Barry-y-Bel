@@ -79,14 +79,17 @@ BEGIN
     DECLARE @NumeroSerie CHAR(10)
 
     -- Set the date of issuance to today's date
-    SET @FechaEmision = GETDATE()
+    SET @FechaEmision = CONVERT(VARCHAR(10), getdate(), 111)
 
     -- Generate a unique certificate number
-    SET @NumeroSerie = CONCAT('CERT-', @Matricula, '-', CONVERT(VARCHAR(8), GETDATE(), 112))
+    SET @NumeroSerie = CONCAT('CERT-', @Matricula, DAY(GETDATE()), MONTH(GETDATE()), YEAR(GETDATE()))
 
     -- Insert the certificate into the Certificado table
-    INSERT INTO Certificado (NumeroSerie, Matricula, FechaEmision)
-    VALUES (@NumeroSerie, @Matricula, @FechaEmision)
+    IF NOT EXISTS (SELECT 1 FROM Certificado WHERE Matricula = @Matricula)
+    BEGIN
+        INSERT INTO Certificado (NumeroSerie, Matricula, FechaEmision)
+        VALUES (@NumeroSerie, @Matricula, @FechaEmision)
+    END
 END
 GO
 
@@ -107,6 +110,7 @@ BEGIN
         RETURN
     END
 
+    -- Update the minigame state.
     IF EXISTS (SELECT * FROM Minijuego WHERE Matricula = @Matricula AND IdVideoJuego = @MinijuegoId)
     BEGIN
         UPDATE Minijuego
@@ -116,6 +120,23 @@ BEGIN
     ELSE
     BEGIN
         RAISERROR ('The user does has not started that minigame.', 16, 1)
+        RETURN
+    END
+
+    -- Update the student's progress.
+    DECLARE @Progreso INT
+    SET @Progreso = (SELECT Progreso FROM Estudiante WHERE Matricula = @Matricula)
+
+    IF NOT @Progreso >= (SELECT COUNT(*) FROM CatalogoMinijuegos)
+    BEGIN
+        UPDATE Estudiante
+        SET Progreso = @Progreso + 1
+        WHERE Matricula = @Matricula
+    END
+    ELSE
+    BEGIN
+        -- Create the certificate if the student has completed all the minigames.
+        EXEC CrearCertificado @Matricula = @Matricula
         RETURN
     END
 END
