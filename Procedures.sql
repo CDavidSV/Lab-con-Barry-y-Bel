@@ -128,6 +128,7 @@ BEGIN
         RETURN
     END
 END
+GO
 
 CREATE PROCEDURE ActualizarMinijuegoEmpezado
     @Matricula CHAR(9),
@@ -140,6 +141,7 @@ BEGIN
         VALUES(@Matricula, @MinijuegoId, 0)
     END
 END
+GO
 
 CREATE PROCEDURE ObtenerCatalogoMinijuegos
 AS
