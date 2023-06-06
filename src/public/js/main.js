@@ -80,6 +80,7 @@ function handleTabs(e) {
             changeTab("juego-tab");
             break;
         case "certificado":
+            getCertificado();
             changeTab("certificado-tab");
             break;
         case "descarga-reglas":
@@ -92,6 +93,21 @@ function handleTabs(e) {
 
     // Highlight the selected option.
     e.target.classList.add('selected');
+}
+
+function getCertificado() {
+    const studentData = JSON.parse(localStorage.getItem('user'));
+    fetch(`${apiURL}/api/certificado?matricula=${studentData.matricula}`).then(response => response.json()).then((result) => {
+        const message = document.querySelector('.certificado-message');
+        const certificado = document.querySelector('.certificado');
+        if (result.state === 'error') 
+            return message.style.visibility = 'visible';
+
+        message.style.visibility = 'hidden';
+        
+        certificado.src = response.blob();
+        certificado.srtyle.visibility = 'visible';
+    });
 }
 
 // Change the visibility of the selected tab.

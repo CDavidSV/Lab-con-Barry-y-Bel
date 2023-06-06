@@ -1,10 +1,3 @@
--- drop all tables in BarryDB
-drop table Certificado;
-drop table Minijuego;
-drop table Estudiante;
-drop table Maestro;
-drop table CatalogoMinijuegos;
-
 CREATE TABLE Estudiante(
 Matricula CHAR(9) PRIMARY KEY NOT NULL, 
 Nombre VARCHAR(50) NOT NULL,
@@ -41,7 +34,7 @@ Campus VARCHAR(25)
 );
 
 CREATE TABLE Certificado(
-NumeroSerie CHAR(10) PRIMARY KEY NOT NULL,
+NumeroSerie CHAR(100) PRIMARY KEY NOT NULL,
 Matricula CHAR(9) FOREIGN KEY REFERENCES Estudiante(Matricula),
 MaestroAutorizo CHAR(9) FOREIGN KEY REFERENCES Maestro(Matricula),
 FechaVencimiento DATETIME,

@@ -75,14 +75,8 @@ CREATE PROCEDURE CrearCertificado
     @Matricula CHAR(9)
 AS
 BEGIN
-    DECLARE @NombreEstudiante VARCHAR(100)
     DECLARE @FechaEmision DATE
     DECLARE @NumeroSerie CHAR(10)
-
-    -- Get the name of the student
-    SELECT @NombreEstudiante = CONCAT(Nombre, ' ', ApPaterno, ' ', ApMaterno)
-    FROM Estudiante
-    WHERE Matricula = @Matricula
 
     -- Set the date of issuance to today's date
     SET @FechaEmision = GETDATE()
@@ -96,53 +90,63 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE ActualizarEstatusEstudiante
+CREATE PROCEDURE ActualizarMinijuegoCompletado
     @Matricula CHAR(9),
-    @NuevoEstatus BIT
+    @MinijuegoId INT
 AS
 BEGIN
-    UPDATE Estudiante
-    SET Estatus = @NuevoEstatus
-    WHERE Matricula = @Matricula
-END
-GO
+    IF NOT EXISTS (SELECT * FROM Estudiante WHERE Matricula = @Matricula)
+    BEGIN
+        RAISERROR ('The student does not exist.', 16, 1)
+        RETURN
+    END
 
-CREATE PROCEDURE ActualizarProgresoEstudiante
+    IF NOT EXISTS (SELECT * FROM CatalogoMinijuegos WHERE Id = @MinijuegoId)
+    BEGIN
+        RAISERROR ('Invalid minigame Id.', 16, 1)
+        RETURN
+    END
+
+    IF EXISTS (SELECT * FROM Minijuego WHERE Matricula = @Matricula AND IdVideoJuego = @MinijuegoId)
+    BEGIN
+        UPDATE Minijuego
+        SET Completado = 1
+        WHERE Matricula = @Matricula AND IdVideoJuego = @MinijuegoId
+    END
+    ELSE
+    BEGIN
+        RAISERROR ('The user does has not started that minigame.', 16, 1)
+        RETURN
+    END
+END
+
+CREATE PROCEDURE ActualizarMinijuegoEmpezado
     @Matricula CHAR(9),
-    @NuevoProgreso INT
+    @MinijuegoId INT
 AS
 BEGIN
-    UPDATE Estudiante
-    SET Progreso = @NuevoProgreso
-    WHERE Matricula = @Matricula
-END
-GO
+    IF NOT EXISTS (SELECT * FROM Estudiante WHERE Matricula = @Matricula)
+    BEGIN
+        RAISERROR ('The student does not exist.', 16, 1)
+        RETURN
+    END
 
-CREATE PROCEDURE UpdateMinijuegoState
-    @MinijuegoId INT,
-    @AlumnoMatricula CHAR(9),
-    @NuevoEstado BIT
+    IF NOT EXISTS (SELECT * FROM CatalogoMinijuegos WHERE Id = @MinijuegoId)
+    BEGIN
+        RAISERROR ('Invalid minigame Id.', 16, 1)
+        RETURN
+    END
+
+    IF NOT EXISTS (SELECT * FROM Minijuego WHERE Matricula = @Matricula AND IdVideoJuego = @MinijuegoId)
+    BEGIN
+        INSERT INTO Minijuego
+        VALUES(@Matricula, @MinijuegoId, 0)
+    END
+END
+
+CREATE PROCEDURE ObtenerCatalogoMinijuegos
 AS
 BEGIN
-    UPDATE Minijuego
-    SET Completado = @NuevoEstado
-    WHERE IdVideoJuego = @MinijuegoId AND Matricula = @AlumnoMatricula
+    SELECT *
+    FROM CatalogoMinijuegos
 END
-GO
-
-CREATE PROCEDURE CrearRegistrosMinijuegos
-    @Matricula CHAR(9)
-AS
-BEGIN
-    DECLARE @CatalogoMinijuegosId INT
-    DECLARE @MinijuegoId INT
-
-    -- Get the Id of the CatalogoMinijuegos
-    SELECT @CatalogoMinijuegosId = Id FROM CatalogoMinijuegos
-
-    -- Insert a new row in Minijuego for each CatalogoMinijuegos
-    INSERT INTO Minijuego (Matricula, IdVideoJuego, Completado)
-    SELECT @Matricula, Id, 0 FROM CatalogoMinijuegos
-
-END
-GO

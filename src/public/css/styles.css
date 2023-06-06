@@ -236,6 +236,7 @@ body {
     position: absolute;
     visibility: hidden;
     margin-top: 15px;
+    padding: 20px;
 }
 
 .content-area-container.active {
@@ -246,8 +247,8 @@ body {
 
 .certificado {
     max-width: 90%; 
-    height: auto; 
-    width: 1700px;
+    height: auto;
+    visibility: hidden;
 }
 
 .separator {
