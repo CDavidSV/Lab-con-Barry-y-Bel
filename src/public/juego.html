@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | My project</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
+    <link href="/src/public/Build/TemplateData/favicon.ico">
+    <link href="/src/public/Build/TemplateData/style.css">
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
@@ -55,15 +55,15 @@
         updateBannerVisibility();
       }
 
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/barry2.loader.js";
+      var buildUrl = "/src/public/Build";
+      var loaderUrl = buildUrl + "/barry5.loader.js";
       var config = {
-        dataUrl: buildUrl + "/barry2.data.br",
-        frameworkUrl: buildUrl + "/barry2.framework.js.br",
-        codeUrl: buildUrl + "/barry2.wasm.br",
+        dataUrl: buildUrl + "/barry5.data.unityweb",
+        frameworkUrl: buildUrl + "/barry5.framework.js.unityweb",
+        codeUrl: buildUrl + "/barry5.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
-        companyName: "DefaultCompany",
-        productName: "My project",
+        companyName: "Tec de Monterrey",
+        productName: "Lab con Barry y Bel",
         productVersion: "1.0",
         showBanner: unityShowBanner,
       };
