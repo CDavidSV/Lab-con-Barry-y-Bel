@@ -27,7 +27,7 @@ router.get('/juego', (req: express.Request, res: express.Response, next: express
         return res.redirect('/maestro');
     } 
     
-    res.sendFile(path.join(__dirname, '../public/alumno.html'));
+    res.sendFile(path.join(__dirname, '../public/juego.html'));
 });
 
 export default router;

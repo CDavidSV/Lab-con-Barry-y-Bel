@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-dotenv.config();
 import express from "express";
 import passport from "passport";
 import cookieParser from "cookie-parser";
@@ -19,6 +18,7 @@ const secret = "O2TsCpfRNb9yhwPjFnLJ";
 
 
 // Config
+dotenv.config();
 colors.enable();
 const app = express();
 const port = 3000;
@@ -46,7 +46,6 @@ app.use('/api', apiRoute);
 const pool = connectToDB().then((pool) => pool);
 
 app.get('/', (req: express.Request, res: express.Response) => {
-    // Send main page.
     res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
