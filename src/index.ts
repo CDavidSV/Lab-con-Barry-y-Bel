@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import colors from "colors";
 import path from "path";
+dotenv.config();
 import connectToDB from "./dboperation";
 
 // Routes
@@ -18,7 +19,7 @@ const secret = "O2TsCpfRNb9yhwPjFnLJ";
 
 
 // Config
-dotenv.config();
+
 colors.enable();
 const app = express();
 const port = 3000;
