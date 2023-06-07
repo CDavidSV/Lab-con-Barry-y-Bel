@@ -39,20 +39,23 @@ passport.use(new Strategy( async (username, password, done) => {
     request.input('email', mssql.NVarChar, username);
     request.input('password', mssql.NVarChar, password);
 
-    const result = await request.execute('ObtenerDatosUsuario');
-    if (result.recordset.length < 1) {
-        // User does not exist.
-        return done(null, false);
+    try {
+        const result = await request.execute('ObtenerDatosUsuario');
+        if (result.recordset.length < 1) {
+            // User does not exist.
+            return done(null, false);
+        }
+        // Credentials are correct.
+        const user = result.recordset[0];
+        if (username.toLowerCase() === user.Correo.toLowerCase() && password === user.CodigoAcceso) {
+            done(null, validateUserType(result.recordset[0]));
+        } else {
+            // Credentials are incorrect.
+            return done(null, false);
+        }
+    } catch (error) {
+        return done(error, false);
     }
-    // Credentials are correct.
-    const user = result.recordset[0];
-    if (username.toLowerCase() === user.Correo.toLowerCase() && password === user.CodigoAcceso) {
-        done(null, validateUserType(result.recordset[0]));
-    } else {
-        // Credentials are incorrect.
-        return done(null, false);
-    }
-    
 }));
 
 passport.serializeUser((user: any, done) => {

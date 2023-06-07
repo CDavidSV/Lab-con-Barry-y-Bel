@@ -1,11 +1,10 @@
-
 // MS SQL Config
-const PORT = Number(process.env.DB_PORT ?? 1433);
+const sqlCredentials = JSON.parse(process.env.SQL_SERVER_CREDENTIALS ?? "{}");
 const config = {
-    user: process.env.DB_USER ?? "",
-    password: process.env.DB_PASSWORD ?? "",
-    server: process.env.DB_SERVER ?? "",
-    database: process.env.DB_DATABASE ?? "",
+    user: sqlCredentials.user,
+    password: sqlCredentials.password,
+    server: sqlCredentials.server,
+    database: sqlCredentials.database,
     options: {
         trustServerCertificate: true,
         trustedconnection: true,
@@ -13,7 +12,7 @@ const config = {
         instancename: "",
         encrypt: true 
     },
-    port: PORT
+    port: sqlCredentials.port
 }
 
 export default config;
