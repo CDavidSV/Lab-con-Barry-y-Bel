@@ -1,6 +1,4 @@
-import dotenv from 'dotenv';
 
-dotenv.config();
 // MS SQL Config
 const PORT = Number(process.env.DB_PORT ?? 1433);
 const config = {

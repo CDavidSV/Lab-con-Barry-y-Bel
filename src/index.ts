@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import passport from "passport";
 import cookieParser from "cookie-parser";
@@ -13,6 +15,8 @@ import maestroRoute from "./routes/maestro";
 import apiRoute from "./routes/api";
 
 const secret = "O2TsCpfRNb9yhwPjFnLJ";
+
+
 
 // Config
 colors.enable();
