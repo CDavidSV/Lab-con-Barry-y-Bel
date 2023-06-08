@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import colors from "colors";
 import path from "path";
-dotenv.config();
+
 import connectToDB from "./dboperation";
 
 // Routes
@@ -14,18 +14,25 @@ import alumnoRoute from "./routes/alumno";
 import maestroRoute from "./routes/maestro";
 import apiRoute from "./routes/api";
 
-const secret = "O2TsCpfRNb9yhwPjFnLJ";
-
-
-
 // Config
-
+dotenv.config();
 colors.enable();
 const app = express();
 const port = 3000;
+const secret = "O2TsCpfRNb9yhwPjFnLJ";
 
 const staticPath = path.join(__dirname, './public');
 app.use(express.static(staticPath));
+app.use('/alumno/TemplateData', express.static(path.join(__dirname, './public/TemplateData'), { 
+    setHeaders: (res, path, stat) => {
+      res.set('Content-Type', 'text/css');
+    }
+}));
+app.use('/alumno/Build', express.static(path.join(__dirname, './public/Build'), { 
+    setHeaders: (res, path, stat) => {
+      res.set('Content-Type', 'application/javascript');
+    }
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser(secret));

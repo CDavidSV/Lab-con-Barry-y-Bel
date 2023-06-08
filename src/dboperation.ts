@@ -3,7 +3,7 @@ import mssql from "mssql";
 
 const connectToDB = async () => {
     try {
-        let pool = await mssql.connect(config);
+        let pool = await mssql.connect(config(JSON.parse(process.env.SQL_SERVER_CREDENTIALS ?? "{}")));
         console.log("Connected to SQL Server...".green);
 
         return pool;
