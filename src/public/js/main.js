@@ -40,7 +40,6 @@ function login() {
             error.innerText = data.message;
             return;
         }
-        console.log(data);
         if (data.user.matricula.toLowerCase().startsWith('l0')) {
             window.location.href = '/maestro';
         } else {
@@ -147,6 +146,8 @@ function logout() {
 function openModal(e) {
     const modal = document.querySelector('.modal');
     const overlay = document.querySelector('#overlay');
+    const progressBar = document.querySelector('.progress-bar');
+    const progressPercentage = document.querySelector('.progress-percentage');
 
     // Get the id from the event emmiter.
     const modalId = e.currentTarget.id
@@ -168,6 +169,52 @@ function openModal(e) {
     studentMatricula.innerText = student.matricula;
     studentState.innerText = student.estado ? 'Compleatado' : 'En Progreso';
     studentState.style.color = student.estado ? 'green' : 'orange';
+
+    // Display the student's progress in the modal.
+    progressBar.style.width = `${student.progreso}%`;
+    progressPercentage.innerText = `${student.progreso}%`;
+
+    // Get minigame data for that student.
+    fetch(`${apiURL}/api/alumno/minijuegos?matricula=${modalId}`)
+    .then(response => response.json())
+    .then((response) => {
+        const minigames = response.minigames;
+        const minigamesContainer = document.querySelector('.minijuegos-list');
+
+        // Clear the container.
+        minigamesContainer.children[0].innerHTML = '';
+
+        // Loop over all minigames and display them.
+        minigames.forEach((minigame) => {
+            const minigameListItem = document.createElement('li');
+            minigameListItem.setAttribute('style', 'margin-bottom: 15px;');
+            minigameListItem.classList.add('minijuego');
+
+            const minigameName = document.createElement('p');
+            minigameName.innerText = minigame.Nombre;
+
+            const minigameState = document.createElement('p');
+            minigameState.setAttribute('style', 'font-weight: bold;');
+            if (minigame.Completado === null) {
+                minigameState.innerText = 'No iniciado';
+                minigameState.style.color = 'red';
+            } else if (minigame.Completado === true) {
+                minigameState.innerText = 'Completado';
+                minigameState.style.color = 'green';
+            } else {
+                minigameState.innerText = 'En Progreso';
+                minigameState.style.color = 'orange';
+            }
+
+            minigameListItem.appendChild(minigameName);
+            minigameListItem.appendChild(minigameState);
+
+            minigamesContainer.children[0].appendChild(minigameListItem);
+        });
+    })
+    .catch((error) => {
+        console.error(error);
+    });
 }
 
 // Closes the active modal.

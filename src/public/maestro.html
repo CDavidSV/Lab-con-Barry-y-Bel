@@ -117,6 +117,10 @@
 
             // For each user in localStorage, create a new list item
             const alumnosContainer = document.querySelector('.alumnos-container ul');
+
+            // Sort by completion percentage.
+            result.users.sort((a, b) => {return b.progreso - a.progreso});
+
             result.users.forEach((estudiante) => {
                 const alumno = document.createElement('li');
                 alumno.classList.add('alumno');

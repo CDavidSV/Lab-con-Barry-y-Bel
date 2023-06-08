@@ -280,6 +280,7 @@ body {
     width: 100%;
     padding: 60px;
     overflow-y: scroll;
+    cursor: pointer;
 }
 
 .alumno {
@@ -380,7 +381,7 @@ body {
 .minijuegos-list {
     margin-top: 12px;
     overflow-y: scroll;
-    height: 100%;
+    height: 150px;
     padding: 10px;
 }
 

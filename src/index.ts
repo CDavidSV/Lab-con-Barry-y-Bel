@@ -5,7 +5,6 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import colors from "colors";
 import path from "path";
-
 import connectToDB from "./dboperation";
 
 // Routes

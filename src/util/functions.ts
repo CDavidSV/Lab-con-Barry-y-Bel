@@ -10,5 +10,4 @@ const validateMatricula = (matricula: string) => {
     return true;
 };
 
-
 export { validateMatricula };

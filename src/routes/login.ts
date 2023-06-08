@@ -8,30 +8,6 @@ import poolPromise from "../index";
 
 const router: express.Router = express.Router();
 
-const validateUserType = (user: any): User => {
-    if (user.Matricula.toLowerCase().startsWith('l0')) {
-        return { 
-            matricula: user.Matricula, 
-            nombre: user.Nombre, 
-            apellidoPaterno: user.ApPaterno, 
-            apellidoMaterno: user.ApMaterno, 
-            correo: user.Correo,
-            campus: user.Campus,
-        } as User;
-    } else {
-        return { 
-            matricula: user.Matricula, 
-            nombre: user.Nombre, 
-            apellidoPaterno: user.ApPaterno, 
-            apellidoMaterno: user.ApMaterno, 
-            correo: user.Correo, 
-            campus: user.Campus,
-            progreso: user.Progreso,
-            estado: user.Estado
-        } as User;
-    }
-}
-
 // Validate user login.
 passport.use(new Strategy( async (username, password, done) => {
     const pool = await poolPromise;
@@ -45,10 +21,25 @@ passport.use(new Strategy( async (username, password, done) => {
             // User does not exist.
             return done(null, false);
         }
+
         // Credentials are correct.
         const user = result.recordset[0];
         if (username.toLowerCase() === user.Correo.toLowerCase() && password === user.CodigoAcceso) {
-            done(null, validateUserType(result.recordset[0]));
+            const minigamesRequest = pool!.request();
+            const minigames = await minigamesRequest.execute('ObtenerCatalogoMinijuegos');
+            const progressPercentage = Math.floor(result.recordset[0].Progreso / minigames.recordset.length * 100);
+            const finalUser = { 
+                matricula: user.Matricula, 
+                nombre: user.Nombre, 
+                apellidoPaterno: user.ApPaterno, 
+                apellidoMaterno: user.ApMaterno, 
+                correo: user.Correo, 
+                campus: user.Campus,
+                progreso: progressPercentage,
+                estado: user.Estado
+            } as User;
+
+            done(null, finalUser);
         } else {
             // Credentials are incorrect.
             return done(null, false);
@@ -70,7 +61,24 @@ passport.deserializeUser(async (matricula, done) => {
     const result = await request.execute('ObtenerDatosUsuarioConId');
     const user = result.recordset[0];
 
-    done(null, validateUserType(user));
+    try {
+        const minigamesRequest = pool!.request();
+        const minigames = await minigamesRequest.execute('ObtenerCatalogoMinijuegos');
+        const progressPercentage = Math.floor(result.recordset[0].Progreso / minigames.recordset.length * 100);
+        const finalUser = { 
+            matricula: user.Matricula, 
+            nombre: user.Nombre, 
+            apellidoPaterno: user.ApPaterno, 
+            apellidoMaterno: user.ApMaterno, 
+            correo: user.Correo, 
+            campus: user.Campus,
+            progreso: progressPercentage,
+            estado: user.Estado
+        } as User;
+        done(null, finalUser);
+    } catch (error) {
+        return done(error, false);
+    }
 });
 
 // Send Login page.

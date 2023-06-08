@@ -11,28 +11,33 @@ const router: express.Router = express.Router();
 // Get all registered students from the database.
 router.get('/alumnos', async (req: express.Request, res: express.Response) => {
     try {
+        // Get students data from the database.
         const pool = await poolPromise;
         const request = pool!.request();
         const result = await request.execute('ObtenerTodosLosEstudiantes');
-        
-        if (result.recordset && result.recordset.length > 0) {
-            // Create an array of users returned by the database.
-            const users = result.recordset.map((user: any) => {
-            return {
-                matricula: user.Matricula,
-                nombre: user.Nombre,
-                apellidoPaterno: user.ApPaterno,
-                apellidoMaterno: user.ApMaterno,
-                correo: user.Correo,
-                progreso: user.Progreso,
-                estado: user.Estado
-            } as User;
-        });
 
-        res.send({ state: "success", size: users.length, users: users });
-        } else {
-          res.send({ state: "success", size: 0, users: [] });
+        const minigamesRequest = pool!.request();
+        const minigames = await minigamesRequest.execute('ObtenerCatalogoMinijuegos');
+
+        if (!result.recordset || result.recordset.length < 1) {
+            res.send({ state: "success", size: 0, users: [] });
         }
+        const users: User[] = [];
+        result.recordset.forEach((student) => {
+            const progressPercentage = Math.floor(student.Progreso / minigames.recordset.length * 100);
+            // Create an array of users returned by the database.
+            users.push({
+                    matricula: student.Matricula,
+                    nombre: student.Nombre,
+                    apellidoPaterno: student.ApPaterno,
+                    apellidoMaterno: student.ApMaterno,
+                    correo: student.Correo,
+                    progreso: progressPercentage,
+                    estado: student.Estado
+                } as User
+            );
+        });
+        res.send({ state: "success", size: users.length, users: users });
       } catch (error) {
         console.error("Error retrieving students:".red, error);
         res.status(500).send({ state: "error", message: "An error occurred while retrieving students." });
@@ -93,12 +98,16 @@ router.get('/alumno', async (req: express.Request, res: express.Response) => {
     if (!validateMatricula(matricula)) return res.status(400).send({ state: "error", message: "matricula parameter is Invalid." });
 
     let result: mssql.IProcedureResult<any>;
+    let minigames: mssql.IProcedureResult<any>;
     try {
         // Get students data from the database.
         const pool = await poolPromise;
         const request = pool!.request();
         request.input('Matricula', mssql.NChar, matricula);
         result = await request.execute('ObtenerEstudiante');
+        
+        const minigamesRequest = pool!.request();
+        minigames = await minigamesRequest.execute('ObtenerCatalogoMinijuegos');
 
         if (!result.recordset || result.recordset.length < 1) {
             return res.send({ state: "error", message: "Student not Found." });
@@ -108,6 +117,8 @@ router.get('/alumno', async (req: express.Request, res: express.Response) => {
         return res.status(500).send({ state: "error", message: "An error occurred while retrieving student." });
     }
 
+    const progressPercentage = Math.floor(result.recordset[0].Progreso / minigames.recordset.length * 100);
+
     res.send({ state: "success", user: { 
         matricula: result.recordset[0].Matricula,
         nombre: result.recordset[0].Nombre,
@@ -115,7 +126,7 @@ router.get('/alumno', async (req: express.Request, res: express.Response) => {
         apellidoMaterno: result.recordset[0].ApMaterno,
         correo: result.recordset[0].Correo,
         campus: result.recordset[0].Campus,
-        progreso: result.recordset[0].Progreso,
+        progreso: progressPercentage,
         estado: result.recordset[0].Estado
     } as User });
 });

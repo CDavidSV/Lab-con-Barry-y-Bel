@@ -5,6 +5,6 @@ export interface User {
     apellidoMaterno: string,
     correo: string,
     campus: string,
-    progreso: number,
-    estado: boolean
+    progreso?: number | null | undefined,
+    estado?: boolean | null | undefined
 }
