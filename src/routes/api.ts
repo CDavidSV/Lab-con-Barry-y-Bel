@@ -20,7 +20,7 @@ router.get('/alumnos', async (req: express.Request, res: express.Response) => {
         const minigames = await minigamesRequest.execute('ObtenerCatalogoMinijuegos');
 
         if (!result.recordset || result.recordset.length < 1) {
-            res.send({ state: "success", size: 0, users: [] });
+            res.send({ status: "success", size: 0, users: [] });
         }
         const users: User[] = [];
         result.recordset.forEach((student) => {
@@ -37,18 +37,18 @@ router.get('/alumnos', async (req: express.Request, res: express.Response) => {
                 } as User
             );
         });
-        res.send({ state: "success", size: users.length, users: users });
+        res.send({ status: "success", size: users.length, users: users });
       } catch (error) {
         console.error("Error retrieving students:".red, error);
-        res.status(500).send({ state: "error", message: "An error occurred while retrieving students." });
+        res.status(500).send({ status: "error", message: "An error occurred while retrieving students." });
       }
 });
 
 // Get a students certificate.
 router.get('/certificado', async (req: express.Request, res: express.Response) => {
     const matricula: string = req.query.matricula as string;
-    if (!matricula) return res.status(400).send({ state: "error", message: "Missing matricula parameter." });
-    if (!validateMatricula(matricula)) return res.status(400).send({ state: "error", message: "matricula parameter is Invalid." });
+    if (!matricula) return res.status(400).send({ status: "error", message: "Missing matricula parameter." });
+    if (!validateMatricula(matricula)) return res.status(400).send({ status: "error", message: "matricula parameter is Invalid." });
 
     let result: mssql.IProcedureResult<any>;
     try {
@@ -59,11 +59,11 @@ router.get('/certificado', async (req: express.Request, res: express.Response) =
         result = await request.execute('ObtenerCertificado');
 
         if (!result.recordset || result.recordset.length < 1) {
-            return res.send({ state: "error", message: "Certificate not found." });
+            return res.send({ status: "error", message: "Certificate not found." });
         }
     } catch (error) {
         console.error("Error retrieving certificate data:".red, error);
-        return res.status(500).send({ state: "error", message: "An error occurred while retrieving certificate." });
+        return res.status(500).send({ status: "error", message: "An error occurred while retrieving certificate." });
     }
   
     // Create a canvas.
@@ -94,8 +94,8 @@ router.get('/certificado', async (req: express.Request, res: express.Response) =
 // Get students data from the database.
 router.get('/alumno', async (req: express.Request, res: express.Response) => {
     const matricula: string = req.query.matricula as string;
-    if (!matricula) return res.status(400).send({ state: "error", message: "Missing matricula parameter." });
-    if (!validateMatricula(matricula)) return res.status(400).send({ state: "error", message: "matricula parameter is Invalid." });
+    if (!matricula) return res.status(400).send({ status: "error", message: "Missing matricula parameter." });
+    if (!validateMatricula(matricula)) return res.status(400).send({ status: "error", message: "matricula parameter is Invalid." });
 
     let result: mssql.IProcedureResult<any>;
     let minigames: mssql.IProcedureResult<any>;
@@ -110,16 +110,16 @@ router.get('/alumno', async (req: express.Request, res: express.Response) => {
         minigames = await minigamesRequest.execute('ObtenerCatalogoMinijuegos');
 
         if (!result.recordset || result.recordset.length < 1) {
-            return res.send({ state: "error", message: "Student not Found." });
+            return res.send({ status: "error", message: "Student not Found." });
         }
     } catch (error) {
         console.error("Error retrieving student data:".red, error);
-        return res.status(500).send({ state: "error", message: "An error occurred while retrieving student." });
+        return res.status(500).send({ status: "error", message: "An error occurred while retrieving student." });
     }
 
     const progressPercentage = Math.floor(result.recordset[0].Progreso / minigames.recordset.length * 100);
 
-    res.send({ state: "success", user: { 
+    res.send({ status: "success", user: { 
         matricula: result.recordset[0].Matricula,
         nombre: result.recordset[0].Nombre,
         apellidoPaterno: result.recordset[0].ApPaterno,
@@ -134,8 +134,8 @@ router.get('/alumno', async (req: express.Request, res: express.Response) => {
 // Get data for all minigames for a student
 router.get('/alumno/minijuegos', async (req: express.Request, res: express.Response) => {
     const matricula: string = req.query.matricula as string;
-    if (!matricula) return res.status(400).send({ state: "error", message: "Missing matricula parameter." });
-    if (!validateMatricula(matricula)) return res.status(400).send({ state: "error", message: "matricula parameter is Invalid." });
+    if (!matricula) return res.status(400).send({ status: "error", message: "Missing matricula parameter." });
+    if (!validateMatricula(matricula)) return res.status(400).send({ status: "error", message: "matricula parameter is Invalid." });
 
     try {
         // Get students data from the database.
@@ -145,14 +145,14 @@ router.get('/alumno/minijuegos', async (req: express.Request, res: express.Respo
         const result = await request.execute('ObtenerMinijuegosPorEstudiante');
 
         if (!result.recordset || result.recordset.length < 1) {
-            return res.send({ state: "error", message: "Student not Found." });
+            return res.send({ status: "error", message: "Student not Found." });
         }
 
-        res.send({ state: "success", minigames: result.recordset });
+        res.send({ status: "success", minigames: result.recordset });
         
     } catch (error) {
         console.error("Error retrieving student data:".red, error);
-        return res.status(500).send({ state: "error", message: "An error occurred while retrieving student." });
+        return res.status(500).send({ status: "error", message: "An error occurred while retrieving student." });
     }
 });
 
@@ -160,10 +160,10 @@ router.get('/alumno/minijuegos', async (req: express.Request, res: express.Respo
 router.post('/alumno/comenzominijuego', async (req: express.Request, res: express.Response) => {
     const { matricula, minigameId } = req.body;
     if (!minigameId || !matricula) {
-      return res.status(400).send({ state: "error", message: "Missing parameters." });
+      return res.status(400).send({ status: "error", message: "Missing parameters." });
     }
     if (!validateMatricula(matricula)) {
-      return res.status(400).send({ state: "error", message: "matricula is Invalid." });
+      return res.status(400).send({ status: "error", message: "matricula is Invalid." });
     }
 
     // Check if the student has started that minigame before. If not, add it to the registry as in-progress.
@@ -181,9 +181,9 @@ router.post('/alumno/comenzominijuego', async (req: express.Request, res: expres
         ]);
 
         if (resultStudent.recordset.length < 1) {
-            return res.status(400).send({ state: "error", message: "Student not Found." });
+            return res.status(400).send({ status: "error", message: "Student not Found." });
         } else if (resultMinigame.recordset.length < 1) {
-            return res.status(400).send({ state: "error", message: "Minigame not Found." });
+            return res.status(400).send({ status: "error", message: "Minigame not Found." });
         }
 
         const request = pool!.request();
@@ -191,9 +191,9 @@ router.post('/alumno/comenzominijuego', async (req: express.Request, res: expres
         request.input('MinijuegoId', mssql.Int, parseInt(minigameId));
         await request.execute('ActualizarMinijuegoEmpezado');
     
-        res.send({ state: "success", message: "Minigame started successfully." });
+        res.send({ status: "success", message: "Minigame started successfully." });
     } catch (error: any) {
-        return res.status(500).send({ state: "error", message: "An error occurred while updating minigame state.", error: error.originalError });
+        return res.status(500).send({ status: "error", message: "An error occurred while updating minigame status.", error: error.originalError });
     }
 });
 
@@ -202,10 +202,10 @@ router.post('/alumno/terminominijuego', async (req: express.Request, res: expres
     // Get matricula and minigame id from post parameters.
     const { matricula, minigameId } = req.body;
     if (!minigameId || !matricula) {
-      return res.status(400).send({ state: "error", message: "Missing parameters." });
+      return res.status(400).send({ status: "error", message: "Missing parameters." });
     }
     if (!validateMatricula(matricula)) {
-      return res.status(400).send({ state: "error", message: "matricula is Invalid." });
+      return res.status(400).send({ status: "error", message: "matricula is Invalid." });
     }
     // Check if the student has started that minigame before. If not, return an error.
     try {
@@ -222,9 +222,9 @@ router.post('/alumno/terminominijuego', async (req: express.Request, res: expres
         ]);
 
         if (resultStudent.recordset.length < 1) {
-            return res.status(400).send({ state: "error", message: "Student not Found." });
+            return res.status(400).send({ status: "error", message: "Student not Found." });
         } else if (resultMinigame.recordset.length < 1) {
-            return res.status(400).send({ state: "error", message: "Minigame not Found." });
+            return res.status(400).send({ status: "error", message: "Minigame not Found." });
         }
 
         const request = pool!.request();
@@ -233,12 +233,12 @@ router.post('/alumno/terminominijuego', async (req: express.Request, res: expres
         const result = await request.execute('ActualizarMinijuegoCompletado');
 
         if (result.rowsAffected.length < 1) {
-            return res.status(400).send({ state: "error", message: "The student hasn't started that minigame." });
+            return res.status(400).send({ status: "error", message: "The student hasn't started that minigame." });
         }
             
-        res.send({ state: "success", message: "Minigame state has been changed to completed."})
+        res.send({ status: "success", message: "Minigame status has been changed to completed."})
     } catch (error: any) {
-        return res.status(500).send({ state: "error", message: "An error occurred while updating minigame state.", error: error.originalError });
+        return res.status(500).send({ status: "error", message: "An error occurred while updating minigame status.", error: error.originalError });
     }
 });
 

@@ -4,13 +4,141 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+
     <link rel="icon" type="image/x-icon" href="./assets/favicon-180x180.png">
+    <link rel="stylesheet" href="./css/styles.css">
     <title>Lab Con Barry</title>
 </head>
 <body>
-    <h1>Bienvenido</h1>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+        <div class="container-fluid">
+          <a href="/" style="display: inline-block; width: 8%; max-width: 100px; margin-right: 20px;">
+            <img src="./assets/logos/Logo_final.PNG" style="width: 100%;" alt="">
+          </a>
+          <a class="navbar-brand" href="/">Lab con Barry y Bel</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Nuestro Equipo</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Reglamento
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Orden y Limpieza</a></li>
+                  <li><a class="dropdown-item" href="#">Evaluación de riesgos</a></li>
+                  <li><a class="dropdown-item" href="#">Riesgos Mecánicos NOM 107 y NOM 108 de STPS</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Máquinas Herramienta</a></li>
+                  <li><a class="dropdown-item" href="#">Protección Personal</a></li>
+                  <li><a class="dropdown-item" href="#">Preparación del Maquinado</a></li>
+                  <li><a class="dropdown-item" href="#">Riesgos en soldadura</a></li>
+                  <li><a class="dropdown-item" href="#">Código de Vestimenta</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Contácto</a>
+              </li>
+            </ul>
+            <a href="/login" class="btn btn-outline-success" style="margin-right: 15px;">Iniciar Sesión</a>
+          </div>
+          
+        </div>
+      </nav>
+      <!-- Carousel -->
+      <style>
+
+      </style>
+      
+      <div id="carouselExampleInterval" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <img class="main-logo" src="./assets/logos/Logo_final.PNG" alt="">
+        <div style="height: 600px; background-color: black;" class="carousel-inner">
+          <div class="carousel-item active" data-bs-interval="10000">
+            <img style="opacity: 0.8; filter: blur(5px);" src="./assets/backgrounds/3_Imagen de Fondo .png" class="d-block w-100 h-100 object-fit-cover" alt="...">
+          </div>
+          <div class="carousel-item" data-bs-interval="10000">
+            <img style="opacity: 0.8; filter: blur(5px);" src="./assets/backgrounds/Fondo_lab_1.png" class="d-block w-100 h-100 object-fit-cover" alt="...">
+          </div>
+          <div class="carousel-item" data-bs-interval="10000">
+            <img style="opacity: 0.8; filter: blur(5px); " src="./assets/backgrounds/fondo_tec.png" class="d-block w-100 h-100 object-fit-cover" alt="...">
+          </div>
+          <div class="carousel-item" data-bs-interval="10000">
+            <img style="opacity: 0.8; filter: blur(5px);" src="./assets/backgrounds/Fondo_Lab_Adentro.PNG" class="d-block w-100 h-100 object-fit-cover" alt="...">
+          </div>
+          <div class="carousel-item" data-bs-interval="10000">
+            <img style="opacity: 0.8; filter: blur(5px);" src="./assets/backgrounds/IMG_0081.PNG" class="d-block w-100 h-100 object-fit-cover" alt="...">
+          </div>
+          <div class="carousel-item" data-bs-interval="10000">
+            <img style="opacity: 0.8; filter: blur(5px);" src="./assets/backgrounds/Fondo_Cuarto.png" class="d-block w-100 h-100 object-fit-cover" alt="...">
+          </div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="container-fluid p-0 clear">
+        <div class="container text-start">
+          <div class="d-flex flex-column flex-lg-row justify-content-center align-items-center p-5 gap-5">
+            <div style="flex: 1;">
+              <h1>¿Qué es <strong>Lab Con Barry y Bel</strong>?</h1>
+              <p style="text-align: justify;">Lab con Barry es un proyecto emocionante que combina la gamificación y la educación para simplificar el proceso de ingreso al laboratorio de manufactura en el Tec de Monterrey. Se trata de un videojuego interactivo diseñado para ayudar a los alumnos a aprender y poner en práctica las reglas y normas del laboratorio.
+
+                El objetivo principal de Lab con Barry es hacer que el aprendizaje de los reglamentos del laboratorio sea más atractivo y efectivo. En lugar de simplemente leer y memorizar las reglas, los estudiantes pueden sumergirse en un mundo virtual donde pueden participar en minijuegos temáticos que les permiten aplicar y practicar las reglas de una manera práctica y divertida.
+              </p>
+            </div>
+            <div style="flex: 1;" class="text-center">
+              <img style="width: 100%; max-width: 500px; min-width: 300px;" src="./assets/images/Barry Pensando.png" alt=""/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid p-0 clear">
+        <div class="container text-start">
+          <div class="d-flex flex-column flex-lg-row justify-content-center align-items-center p-5 gap-5">
+            <div style="flex: 1;" class="text-center">
+              <img style="width: 100%; max-width: 500px; min-width: 300px" src="./assets/images/In_game_1.png" alt=""/>
+            </div>
+            <div style="flex: 1;">
+              <h1>Minijuegos</h1>
+              <p style="text-align: justify;">En lugar de abrumarte con páginas y páginas de reglamentos y normas, hemos creado una experiencia interactiva que te permitirá aprender y practicar estas reglas de una manera práctica y entretenida.</p>
+              <br>
+              <p style="text-align: justify;">Nuestro videojuego está compuesto por varios minijuegos, cada uno de ellos enfocado en un aspecto específico de los reglamentos del laboratorio. En cada juego, tendrás la oportunidad de poner en práctica tus conocimientos y habilidades, mientras te diviertes y desafías a ti mismo.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid p-0 clear bg-dark text-white" data-bs-theme="dark">
+        <div class="container text-start p-5">
+          <div class="row">
+            <div class="col-md-6 mb-4">
+              <img src="./assets/images/alumno.png" alt="Image 1" class="img-fluid">
+            </div>
+            <div class="col-md-6 mb-4">
+              <img src="./assets/images/maestro.png" alt="Image 2" class="img-fluid">
+            </div>
+          </div>
+    
+          <div class="text-center mt-4">
+            <h2 class="text-white mb-4">Dashboards</h2>
+            <p style="font-weight: 200;">Al entrar e iniciar sesión en la Plataforma se presentan menús distintos según el Usuario. Los alumnos podrán acudir al reglamento su certificado y jugar el juego mientras que los encargados o maestros podrán monitorear el progreso de los alumnos, identificar quiénes han completado el juego, conocer su avance en los minijuegos y verificar si ya están capacitados mediante su certificado.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
 </body>
 </html>

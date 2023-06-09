@@ -12,10 +12,7 @@ html, body {
     width: 100%;
 }
 
-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.bg-shadow {
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -490,6 +487,24 @@ body {
     font-weight: 100;
 }
 
+.carousel-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.main-logo {
+    position: absolute;
+    z-index: 2;
+    width: 500px;
+    top: 50%;
+    bottom: 0;
+    left: 50%;
+    right: 0;
+    transform: translate(-50%, -50%);
+}
+
 @media (max-width: 900px) {
     .login-container {
         flex-direction: column;
@@ -547,6 +562,6 @@ body {
 }
 
 *::-webkit-scrollbar-thumb {
-    background-color: #777777;
+    background-color: #c4c4c4;
     border-radius: 12px;
 }

@@ -6,6 +6,7 @@ function login() {
     const emailInput = document.querySelector('#email');
     const passwordInput = document.querySelector('#password');
     const error = document.querySelector('.error-msg');
+    const submitBtn = document.querySelector('.btn');
     const emailValue = emailInput.value;
 
     // Eliminar texto después de '@' y convertir en mayúsculas
@@ -23,6 +24,12 @@ function login() {
 
     // email valid.
     email.parentElement.classList.remove("was-validated");
+
+    emailInput.disabled = true;
+    passwordInput.disabled = true;
+    submitBtn.disabled = true;
+    submitBtn.innerText = 'Iniciano sesión...';
+    submitBtn.style.opacity = '0.5';
       
     fetch(`${apiURL}/login`, {
         method: 'POST',
@@ -46,8 +53,18 @@ function login() {
             window.location.href = '/alumno';
         }
         localStorage.setItem('user', JSON.stringify(data.user));
+        emailInput.disabled = false;
+        passwordInput.disabled = false;
+        submitBtn.disabled = false;
+        submitBtn.innerText = 'INICIAR SESIÓN';
+        submitBtn.style.opacity = '1';
     })
     .catch(error => {
+        emailInput.disabled = false;
+        passwordInput.disabled = false;
+        submitBtn.disabled = false;
+        submitBtn.innerText = 'INICIAR SESIÓN';
+        submitBtn.style.opacity = '1';
         console.error('Error:', error);
     });
 }
@@ -105,7 +122,7 @@ function getCertificado() {
     fetch(`${apiURL}/api/certificado?matricula=${studentData.matricula}`).then(response => response.json()).then((result) => {
         const message = document.querySelector('.certificado-message');
         const certificado = document.querySelector('.certificado');
-        if (result.state === 'error') 
+        if (result.status === 'error') 
             return message.style.visibility = 'visible';
 
         message.style.visibility = 'hidden';
@@ -133,6 +150,7 @@ function changeTab(tabId) {
 function logout() {
     // Remove user data from local storage.
     localStorage.removeItem('user');
+    localStorage.removeItem('estudiantesData');
 
     fetch(`${apiURL}/logout`, { method: 'GET' })
     .then(response => response.json())
