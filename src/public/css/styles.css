@@ -78,6 +78,9 @@ html, body {
 }
 
 .login-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-image: url("../assets/backgrounds/fondo_tec.png");
 }
 
