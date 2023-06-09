@@ -2,7 +2,7 @@ import path from "path";
 import { createCanvas, loadImage } from "canvas";
 import express from "express";
 import poolPromise from "../index";
-import { User } from "../../types";
+import { StudentStats, User } from "../../types";
 import mssql from "mssql";
 import { validateMatricula } from "../util/functions";
 
@@ -154,6 +154,22 @@ router.get('/alumno/minijuegos', async (req: express.Request, res: express.Respo
         console.error("Error retrieving student data:".red, error);
         return res.status(500).send({ status: "error", message: "An error occurred while retrieving student." });
     }
+});
+
+router.get('/stats', async (req: express.Request, res: express.Response) => {
+    const pool = await poolPromise;
+    const request = pool!.request();
+
+    const resultData = await request.execute('ObtenerDatos');
+    const resultProgress = await request.execute('ObtenerProgresoEstudiantes');
+
+    const registeredStudents = resultData.recordset[0].CuentaEstudiantes;
+    const completedCourses = resultData.recordset[0].CuentaCertificados;
+    const minigameCount = resultData.recordset[0].CuentaMinijuegos;
+    const coursesInProgress = registeredStudents - completedCourses;
+    const averageProgress = Math.round(resultProgress.recordset.map(progress => progress.Progreso / minigameCount * 100).reduce((a, b) => a + b, 0) / registeredStudents);
+
+    res.send({ status: "success", data: {registered: registeredStudents, completedCourses, inProgressCourses: coursesInProgress, averageProgress} as StudentStats });
 });
 
 // Update the students minigame registry with the new started minigame.

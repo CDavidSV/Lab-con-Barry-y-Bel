@@ -8,3 +8,10 @@ export interface User {
     progreso?: number | null | undefined,
     estado?: boolean | null | undefined
 }
+
+export interface StudentStats {
+    registered: number,
+    completedCourses: number,
+    inProgressCourses: number,
+    averageProgress: number,
+}
