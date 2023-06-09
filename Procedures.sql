@@ -42,11 +42,11 @@ CREATE PROCEDURE ObtenerCertificado
 @Matricula CHAR(9)
 AS
 BEGIN
-
     SELECT e.Matricula, e.Nombre, e.ApPaterno, e.ApMaterno, e.Campus, c.NumeroSerie, c.FechaEmision, c.FechaVencimiento
-    FROM Estudiante e
-	INNER JOIN Certificado c
-	ON e.Matricula = c.Matricula
+    FROM Certificado c
+    INNER JOIN Estudiante e
+    ON e.Matricula = c.Matricula 
+    WHERE e.Matricula = @Matricula
 END
 GO
 

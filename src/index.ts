@@ -20,6 +20,7 @@ const app = express();
 const port = 3000;
 const secret = "O2TsCpfRNb9yhwPjFnLJ";
 
+// Middleware.
 const staticPath = path.join(__dirname, './public');
 app.use(express.static(staticPath));
 app.use('/alumno/TemplateData', express.static(path.join(__dirname, './public/TemplateData'), { 
@@ -72,13 +73,10 @@ app.get('/logout', (req: express.Request, res: express.Response, next: express.N
     });
 });
 
-// Catch-all route for invalid URLs
-app.get('*', (req: express.Request, res: express.Response) => {
-    res.redirect('/');
-});
-
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`.green)
 });
+
+app.use((_, res) => res.redirect("/"));
 
 export default pool;

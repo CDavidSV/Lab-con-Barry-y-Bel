@@ -54,6 +54,11 @@ function login() {
     .then(data => {
         if (data.message) {
             error.innerText = data.message;
+            emailInput.disabled = false;
+            passwordInput.disabled = false;
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'INICIAR SESIÓN';
+            submitBtn.style.opacity = '1';
             return;
         }
         if (data.user.matricula.toLowerCase().startsWith('l0')) {
@@ -102,19 +107,28 @@ function handleTabs(e) {
 }
 
 // Get the certificate.
-function getCertificado() {
+async function getCertificado() {
     const studentData = JSON.parse(localStorage.getItem('user'));
-    fetch(`${apiURL}/api/certificado?matricula=${studentData.matricula}`).then(response => response.json()).then((result) => {
-        const message = document.querySelector('.certificado-message');
-        const certificado = document.querySelector('.certificado');
-        if (result.status === 'error') 
-            return message.style.visibility = 'visible';
+    const message = document.querySelector('.certificado-message');
+    const certificado = document.querySelector('.certificado');
 
-        message.style.visibility = 'hidden';
-        
-        certificado.src = response.blob();
-        certificado.srtyle.visibility = 'visible';
-    });
+    const response = await fetch(`${apiURL}/api/certificado?matricula=${studentData.matricula}`);
+    if (response.status === 404) {
+        message.style.visibility = 'visible';
+        message.innerText = 'Tienes que completar el juego para obtener tu certificado.';
+        message.style.color = 'red';
+        return;
+    }
+
+    if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+    }
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    certificado.src = url;
+    certificado.style.visibility = 'visible';
+    message.style.visibility = 'hidden';
 }
 
 // Get the dashboard stats

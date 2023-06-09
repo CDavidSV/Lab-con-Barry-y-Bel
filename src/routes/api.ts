@@ -59,7 +59,7 @@ router.get('/certificado', async (req: express.Request, res: express.Response) =
         result = await request.execute('ObtenerCertificado');
 
         if (!result.recordset || result.recordset.length < 1) {
-            return res.send({ status: "error", message: "Certificate not found." });
+            return res.status(404).send({ status: "error", message: "Certificate not found." });
         }
     } catch (error) {
         console.error("Error retrieving certificate data:".red, error);
@@ -88,7 +88,7 @@ router.get('/certificado', async (req: express.Request, res: express.Response) =
     // Send the image.
     const buffer = canvas.toBuffer();
     res.setHeader('Content-Type', 'image/jpeg');
-    res.send(buffer);
+    res.status(200).send(buffer);
 });
 
 // Get students data from the database.
