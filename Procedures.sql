@@ -154,3 +154,20 @@ BEGIN
     WHERE Id = @MinijuegoId
 END
 GO
+
+CREATE PROCEDURE ObtenerDatos
+AS
+BEGIN
+    SELECT 
+        (SELECT COUNT(*) FROM Estudiante) AS CuentaEstudiantes,
+        (SELECT COUNT(*) FROM Certificado) AS CuentaCertificados,
+        (SELECT COUNT(*) FROM CatalogoMinijuegos) AS CuentaMinijuegos
+END
+GO
+
+CREATE PROCEDURE ObtenerProgresoEstudiantes
+AS
+BEGIN
+	SELECT Progreso FROM Estudiante
+END
+GO

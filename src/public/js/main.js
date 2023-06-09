@@ -2,6 +2,15 @@
 const apiURL = "http://localhost:3000";
 let menuOpen = false;
 
+const tabs = {
+    'juego': {change: () => changeTab('juego-tab'), exec: null},
+    'certificado': {change: () =>  changeTab('certificado-tab'), exec: () => getCertificado()},
+    'descarga-reglas': {change: null, exec: null},
+    'alumnos': {change: () => changeTab('alumnos-tab'), exec: null},
+    'dashboard': {change: () => changeTab('dashboard-tab'), exec: () => getDashboardData()},
+    'powerbi': {change: () => changeTab('powerbi-tab'), exec: null}
+};
+
 function login() {
     const emailInput = document.querySelector('#email');
     const passwordInput = document.querySelector('#password');
@@ -53,18 +62,8 @@ function login() {
             window.location.href = '/alumno';
         }
         localStorage.setItem('user', JSON.stringify(data.user));
-        emailInput.disabled = false;
-        passwordInput.disabled = false;
-        submitBtn.disabled = false;
-        submitBtn.innerText = 'INICIAR SESIÓN';
-        submitBtn.style.opacity = '1';
     })
     .catch(error => {
-        emailInput.disabled = false;
-        passwordInput.disabled = false;
-        submitBtn.disabled = false;
-        submitBtn.innerText = 'INICIAR SESIÓN';
-        submitBtn.style.opacity = '1';
         console.error('Error:', error);
     });
 }
@@ -91,32 +90,18 @@ function handleTabs(e) {
         option.classList.remove('selected');
     });
 
-    switch (e.target.id) {
-        case "juego":
-            changeTab("juego-tab");
-            break;
-        case "certificado":
-            getCertificado();
-            changeTab("certificado-tab");
-            break;
-        case "descarga-reglas":
-            // Download something.
-            break;
-        case "alumnos":
-            changeTab("alumnos-tab");
-            break;
-        case "dashboard":
-            changeTab("dashboard-tab")
-            break;
-        case "powerbi":
-            changeTab("powerbi-tab")
-            break;
-    }
+    // Execute the selected tab.
+    const tab = tabs[e.target.id];
+
+    if (tab.exec) tab.exec();
+
+    tab.change();
 
     // Highlight the selected option.
     e.target.classList.add('selected');
 }
 
+// Get the certificate.
 function getCertificado() {
     const studentData = JSON.parse(localStorage.getItem('user'));
     fetch(`${apiURL}/api/certificado?matricula=${studentData.matricula}`).then(response => response.json()).then((result) => {
@@ -129,6 +114,23 @@ function getCertificado() {
         
         certificado.src = response.blob();
         certificado.srtyle.visibility = 'visible';
+    });
+}
+
+// Get the dashboard stats
+function getDashboardData() {
+    fetch(`${apiURL}/api/stats`).then(response => response.json()).then((result) => {
+        const estudiantesRegistrados = document.querySelector('#registered-students');
+        const completed = document.querySelector('#completed-courses');
+        const inProgress = document.querySelector('#courses-in-progress');
+        const averageProgress = document.querySelector('#average-progress');
+
+        estudiantesRegistrados.innerText = result.data.registered;
+        completed.innerText = result.data.completedCourses;
+        inProgress.innerText = result.data.inProgressCourses;
+        averageProgress.innerText = result.data.averageProgress + "%";
+    }).catch((error) => {
+        console.error(error);
     });
 }
 
