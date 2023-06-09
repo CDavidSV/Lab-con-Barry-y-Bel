@@ -12,6 +12,18 @@ html, body {
     width: 100%;
 }
 
+.material-symbols-outlined.md-200{
+    font-size: 150px;
+    margin-right: 20px;
+    color: red
+}
+
+.material-symbols-outlined.md-201{
+    font-size: 150px;
+    margin-right: 20px;
+    color: orange;
+}
+
 .bg-shadow {
     background-repeat: no-repeat;
     background-position: center center;
