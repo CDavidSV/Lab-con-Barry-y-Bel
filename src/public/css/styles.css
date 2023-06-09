@@ -290,6 +290,15 @@ html, body {
     font-weight: normal;
 }
 
+.image-scale-hover {
+    object-fit: cover;
+    transition: 0.5s ease;
+}
+
+.image-scale-hover:hover {
+    transform: scale(1.05);
+}
+
 .content-area-container {
     display: flex;
     flex-grow: 1;
