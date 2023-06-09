@@ -88,6 +88,12 @@ function handleTabs(e) {
         case "alumnos":
             changeTab("alumnos-tab");
             break;
+        case "dashboard":
+            changeTab("dashboard-tab")
+            break;
+        case "powerbi":
+            changeTab("powerbi-tab")
+            break;
     }
 
     // Highlight the selected option.

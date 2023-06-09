@@ -36,6 +36,14 @@
                     <p class="menu-option-title">Alumnos</p>
                 </div>
                 <span class="separator"></span>
+                <div id="dashboard" class="menu-option" onclick="handleTabs(event)">
+                    <p class="menu-option-title">Dashboard</p>
+                </div>
+                <span class="separator"></span>
+                <div id="powerbi" class="menu-option" onclick="handleTabs(event)">
+                    <p class="menu-option-title">PowerBI</p>
+                </div>
+                <span class="separator"></span>
             </div>
             <div id="certificado" class="menu-footer" onclick="logout()">
                 <p class="menu-option-title">Cerrar Sesión</p>
@@ -100,6 +108,45 @@
             </div>
         </div>
         <div id="overlay" onclick="closeModal()"></div>
+
+        <div id="dashboard-tab" class="content-area-container">
+            <h1 class="tab-title">Dashboard</h1>
+                <div class="main-cards">
+
+                    <div class="card">
+                        <div class="card-inner">
+                            <p class="text-primary">ESTUDIANTES REGISTRADOS</p>
+                        </div>
+                        <span class="text-primary">21</span>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-inner">
+                            <p class="text-primary">CURSOS COMPLETADOS</p>
+                        </div>
+                        <span class="text-primary">5</span>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-inner">
+                            <p class="text-primary">CURSOS EN PROGRESO</p>
+                        </div>
+                        <span class="text-primary">16</span>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-inner">
+                            <p class="text-primary">PROGRESO PROMEDIO</p>
+                        </div>
+                        <span class="text-primary">3.33</span>
+                    </div>
+                </div>
+
+            </div>
+            <div id="powerbi-tab" class="content-area-container">
+                <img class="powerbi" src="./assets/dash.jpg" alt="PowerBI">
+            </div>
+        </div>
     </div>
     </div>
     <script>

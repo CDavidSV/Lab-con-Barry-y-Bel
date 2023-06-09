@@ -22,6 +22,64 @@ body {
     box-shadow: inset 0 0 1000px #000;
 }
 
+.text-primary {
+    color: #666666;
+}
+
+.main-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 25px;
+    background-color: #FFFFFF;
+    box-sizing: border-box;
+    border: 1px solid #d2d2d3;
+    border-radius: 5px;
+    box-shadow: 0 6px 7px -4px rgba(0,0,0,0.2);
+}
+
+.card:first-child {
+    border-left: 7px solid #246dec;
+}
+
+.card:nth-child(2) {
+    border-left: 7px solid #367952;
+}
+
+.card:nth-child(3) {
+    border-left: 7px solid #f5b74f;
+}
+
+.card:nth-child(4) {
+    border-left: 7px solid #cc3c43;
+}
+
+.card > span {
+    font-size: 40px;
+    font-weight: 600;
+}
+
+.card-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-inner > p {
+    font-size: 36px;
+}
+
+.card-inner > span {
+    font-size: 70px;
+}
+
 .login-body {
     background-image: url("../assets/backgrounds/fondo_tec.png");
 }
@@ -49,6 +107,13 @@ body {
     height: auto; 
     width: 800px;
 }
+
+.powerbi {
+    max-width: 100%; 
+    height: auto; 
+    width: 100%;
+}
+
 
 .btn-start {
     max-width: 100%; 
