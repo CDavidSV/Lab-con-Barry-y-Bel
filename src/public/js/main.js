@@ -38,7 +38,7 @@ function login() {
     emailInput.disabled = true;
     passwordInput.disabled = true;
     submitBtn.disabled = true;
-    submitBtn.innerText = 'Iniciano sesión...';
+    submitBtn.innerText = 'Iniciando sesión...';
     submitBtn.style.opacity = '0.5';
       
     fetch(`${apiURL}/login`, {
