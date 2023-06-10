@@ -1,6 +1,7 @@
 // Variables
 const apiURL = "http://localhost:3000";
 let menuOpen = false;
+let selectedModalId = "";
 
 const tabs = {
     'juego': {change: () => changeTab('juego-tab'), exec: null},
@@ -113,22 +114,38 @@ async function getCertificado() {
     const certificado = document.querySelector('.certificado');
 
     const response = await fetch(`${apiURL}/api/certificado?matricula=${studentData.matricula}`);
-    if (response.status === 404) {
-        message.style.visibility = 'visible';
-        message.innerText = 'Tienes que completar el juego para obtener tu certificado.';
-        message.style.color = 'red';
-        return;
-    }
 
-    if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-    }
+    try {
+        const result = await response.clone().json();
 
-    const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
-    certificado.src = url;
-    certificado.style.visibility = 'visible';
-    message.style.visibility = 'hidden';
+        if (result.status === 'error') {
+            message.style.visibility = 'visible';
+            message.innerText = 'Tienes que completar el juego para obtener tu certificado.';
+            message.style.color = 'red';
+            return;
+        }
+    } catch {
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        certificado.src = url;
+        certificado.style.visibility = 'visible';
+        message.style.visibility = 'hidden';
+    }
+}
+
+// Get and download the certificate.
+function downloadCertificado() {
+    // Create a download link for the certificate.
+    const download = document.createElement('a');
+    const certificateUrl = JSON.parse(localStorage.getItem('certificates'))[selectedModalId];
+
+    if (!certificateUrl) return;
+    download.href = certificateUrl;
+    download.download = `${selectedModalId}-certificado.png`;
+
+    document.body.appendChild(download);
+    download.click();
+    document.body.removeChild(download);
 }
 
 // Get the dashboard stats
@@ -162,38 +179,29 @@ function changeTab(tabId) {
     });
 }
 
-// Clear session data and redirect to login page.
-function logout() {
-    // Remove user data from local storage.
-    localStorage.removeItem('user');
-    localStorage.removeItem('estudiantesData');
-
-    fetch(`${apiURL}/logout`, { method: 'GET' })
-    .then(response => response.json())
-    .then((response) => {
-      if (response.status === 'success') {
-        window.location.href = '/login'; // Redirect to the login page or desired location
-      } else {
-        console.error(response);
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
-
 // Opens a modal and displays relevant information.
-function openModal(e) {
+async function openModal(e) {
     const modal = document.querySelector('.modal');
     const overlay = document.querySelector('#overlay');
     const progressBar = document.querySelector('.progress-bar');
     const progressPercentage = document.querySelector('.progress-percentage');
+    const viewCertificate = document.querySelector('.certificado-btn');
+    const downloadCertificate = document.querySelector('.download-btn');
+
+    // Clear the container.
+    const minigamesContainer = document.querySelector('.minijuegos-list');
+    minigamesContainer.children[0].innerHTML = "";
 
     // Get the id from the event emmiter.
     const modalId = e.currentTarget.id
+    selectedModalId = modalId;
 
     modal.classList.add('active');
     overlay.classList.add('active');
+
+    // Get Certificate data and minigame data from local storage.
+    const certificates = JSON.parse(localStorage.getItem('certificates'));
+    const studentsMinigames = JSON.parse(localStorage.getItem('minigames'));
 
     // Display student information in the modal depending on the students id.
     const studentData = JSON.parse(localStorage.getItem('estudiantesData'));
@@ -214,47 +222,60 @@ function openModal(e) {
     progressBar.style.width = `${student.progreso}%`;
     progressPercentage.innerText = `${student.progreso}%`;
 
-    // Get minigame data for that student.
-    fetch(`${apiURL}/api/alumno/minijuegos?matricula=${modalId}`)
-    .then(response => response.json())
-    .then((response) => {
-        const minigames = response.minigames;
-        const minigamesContainer = document.querySelector('.minijuegos-list');
+    viewCertificate.disabled = true;
+    downloadCertificate.disabled = true;
+    viewCertificate.style.opacity = '0.5';
+    downloadCertificate.style.opacity = '0.5';
 
-        // Clear the container.
-        minigamesContainer.children[0].innerHTML = '';
+    // Check if the student's minigames are cached in local storage.
+    if (!studentsMinigames[modalId]) {
+        // Get minigame data for that student.
+        fetch(`${apiURL}/api/alumno/minijuegos?matricula=${modalId}`)
+        .then(response => response.json())
+        .then((response) => {
+            const minigames = response.minigames;
+            fillMinigames(minigames);
 
-        // Loop over all minigames and display them.
-        minigames.forEach((minigame) => {
-            const minigameListItem = document.createElement('li');
-            minigameListItem.setAttribute('style', 'margin-bottom: 15px;');
-            minigameListItem.classList.add('minijuego');
-
-            const minigameName = document.createElement('p');
-            minigameName.innerText = minigame.Nombre;
-
-            const minigameState = document.createElement('p');
-            minigameState.setAttribute('style', 'font-weight: bold;');
-            if (minigame.Completado === null) {
-                minigameState.innerText = 'No iniciado';
-                minigameState.style.color = 'red';
-            } else if (minigame.Completado === true) {
-                minigameState.innerText = 'Completado';
-                minigameState.style.color = 'green';
-            } else {
-                minigameState.innerText = 'En Progreso';
-                minigameState.style.color = 'orange';
-            }
-
-            minigameListItem.appendChild(minigameName);
-            minigameListItem.appendChild(minigameState);
-
-            minigamesContainer.children[0].appendChild(minigameListItem);
+            studentsMinigames[modalId] = minigames
+            localStorage.setItem('minigames', JSON.stringify(studentsMinigames));
+        })
+        .catch((error) => {
+            console.error(error);
         });
-    })
-    .catch((error) => {
-        console.error(error);
-    });
+    } else {
+        fillMinigames(studentsMinigames[modalId]);
+    }
+
+    // Check if the student's certificate is cached in local storage.
+    if (!certificates[modalId]) {
+        // Set the download btn for the certificate.
+        const response = await fetch(`${apiURL}/api/certificado?matricula=${modalId}`);
+        try {
+            await response.clone().json();
+            certificates[modalId] = "N/A";
+            localStorage.setItem('certificates', JSON.stringify(certificates));
+            return;
+        } catch {
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            viewCertificate.href = url;
+            certificates[modalId] = url
+            localStorage.setItem('certificates', JSON.stringify(certificates));
+            
+            viewCertificate.disabled = false;
+            downloadCertificate.disabled = false;
+            viewCertificate.style.opacity = '1';
+            downloadCertificate.style.opacity = '1';
+        }
+    } else if (certificates[modalId] === "N/A"){
+        return;
+    }
+    viewCertificate.href = certificates[modalId];
+
+    viewCertificate.disabled = false;
+    downloadCertificate.disabled = false;
+    viewCertificate.style.opacity = '1';
+    downloadCertificate.style.opacity = '1';
 }
 
 // Closes the active modal.
@@ -264,4 +285,56 @@ function closeModal() {
 
     modal.classList.remove('active');
     overlay.classList.remove('active');
+}
+
+function fillMinigames(minigames) {
+    const minigamesContainer = document.querySelector('.minijuegos-list');
+
+    // Loop over all minigames and display them.
+    minigames.forEach((minigame) => {
+        const minigameListItem = document.createElement('li');
+        minigameListItem.setAttribute('style', 'margin-bottom: 15px;');
+        minigameListItem.classList.add('minijuego');
+
+        const minigameName = document.createElement('p');
+        minigameName.innerText = minigame.Nombre;
+
+        const minigameState = document.createElement('p');
+        minigameState.setAttribute('style', 'font-weight: bold;');
+        if (minigame.Completado === null) {
+            minigameState.innerText = 'No iniciado';
+            minigameState.style.color = 'red';
+        } else if (minigame.Completado === true) {
+            minigameState.innerText = 'Completado';
+            minigameState.style.color = 'green';
+        } else {
+            minigameState.innerText = 'En Progreso';
+            minigameState.style.color = 'orange';
+        }
+
+        minigameListItem.appendChild(minigameName);
+        minigameListItem.appendChild(minigameState);
+
+        minigamesContainer.children[0].appendChild(minigameListItem);
+    });
+}
+
+// Clear session data and redirect to login page.
+function logout() {
+    // Remove user data from local storage.
+    localStorage.removeItem('user');
+    localStorage.removeItem('estudiantesData');
+
+    fetch(`${apiURL}/logout`, { method: 'GET' })
+    .then(response => response.json())
+    .then((response) => {
+      if (response.status === 'success') {
+        window.location.href = '/login'; // Redirect to the login page or desired location
+      } else {
+        console.error(response);
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 }

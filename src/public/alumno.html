@@ -11,7 +11,8 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="./css/styles.css">
 
-    <script defer src="./js/main.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/alumno.js"></script>
     <link rel="icon" type="image/x-icon" href="./assets/favicon-180x180.png">
     <title>Lab con Barry - Juego</title>
 </head>
@@ -73,21 +74,5 @@
             <p style="color: black; font-size: 32px;" class="certificado-message">Loading...</p>
         </div>
     </div>
-
-    <script>
-        const name = document.querySelector('.user-name');
-        const progressPercentage = document.querySelector('.progress-percentage');
-        const progressBar = document.querySelector('.progress-bar');
-        const studentId = document.querySelector('.user-id');
-
-        const user = JSON.parse(localStorage.getItem('user'));
-
-        name.innerText = `${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno}`;
-        studentId.innerText = user.matricula;
-
-        // Set the progress bar and percentage to the user progress
-        progressPercentage.innerText = `${user.progreso}%`;
-        progressBar.style.width = `${user.progreso}%`;
-    </script>
 </body>
 </html>

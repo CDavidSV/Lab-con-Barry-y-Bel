@@ -106,18 +106,28 @@ BEGIN
    
         -- Update the student's progress.
         DECLARE @Progreso INT
+        DECLARE @Minijuegos INT
         SET @Progreso = (SELECT Progreso FROM Estudiante WHERE Matricula = @Matricula)
-
-        IF NOT @Progreso >= (SELECT COUNT(*) FROM CatalogoMinijuegos)
+        SET @Minijuegos = (SELECT COUNT(*) FROM CatalogoMinijuegos)
+        
+        IF NOT @Progreso >= @Minijuegos
         BEGIN
+            SET @Progreso = @Progreso + 1
+
             UPDATE Estudiante
-            SET Progreso = @Progreso + 1
+            SET Progreso = @Progreso, Estado = 0
             WHERE Matricula = @Matricula
         END
-        ELSE
+
+        IF @Progreso = @Minijuegos
         BEGIN
             -- Create the certificate if the student has completed all the minigames.
             EXEC CrearCertificado @Matricula = @Matricula
+            
+            -- Update User completion state.
+            UPDATE Estudiante
+            SET Estado = 1
+            WHERE Matricula = @Matricula
             RETURN
         END
     END

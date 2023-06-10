@@ -12,6 +12,11 @@ html, body {
     width: 100%;
 }
 
+a {
+    text-decoration: none;
+    color: black;
+}
+
 .material-symbols-outlined.md-200{
     font-size: 150px;
     margin-right: 20px;
@@ -323,12 +328,14 @@ html, body {
     visibility: hidden;
     margin-top: 15px;
     padding: 20px;
+    right: 10000px;
 }
 
 .content-area-container.active {
     visibility: visible;
     opacity: 1;
     position: relative;
+    right: 0px;
 }
 
 .certificado {
@@ -366,7 +373,6 @@ html, body {
     width: 100%;
     padding: 60px;
     overflow-y: scroll;
-    cursor: pointer;
 }
 
 .alumno {
@@ -381,6 +387,7 @@ html, body {
     font-size: 20px;
     margin-bottom: 25px;
     box-shadow: 5px 7px 30px #000;
+    cursor: pointer;
 }
 
 .tab-title {
@@ -397,7 +404,7 @@ html, body {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -30%);
+    transform: translate(-50%, -70%);
     opacity: 0;
     visibility: hidden;
     border-radius: 10px;
@@ -465,6 +472,8 @@ html, body {
 }
 
 .minijuegos-list {
+    display: flex;
+    flex-direction: column;
     margin-top: 12px;
     overflow-y: scroll;
     height: 150px;
@@ -488,6 +497,7 @@ html, body {
     border: none;
     box-shadow: 2px 2px 30px #888888;
     cursor: pointer;
+    transition: 0.3s ease;
 }
 
 .download-btn {
@@ -497,6 +507,7 @@ html, body {
     background-color: #CBCBCB;
     box-shadow: 2px 2px 30px #888888;
     cursor: pointer;
+    transition: 0.3s ease;
 }
 
 .close-modal-btn {
@@ -529,6 +540,34 @@ html, body {
     transform: translate(-50%, -50%);
 }
 
+/* Loader */
+.loader {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 32px 0 #fff, -32px 0 #fff;
+    position: relative;
+    animation: flash 0.5s ease-out infinite alternate;
+    left: 150px;
+    top: 26px;
+}
+  
+@keyframes flash {
+    0% {
+        background-color: #FFF2;
+        box-shadow: 32px 0 #FFF2, -32px 0 #777777;
+    }
+    50% {
+        background-color: #777777;
+        box-shadow: 32px 0 #FFF2, -32px 0 #FFF2;
+    }
+    100% {
+        background-color: #FFF2;
+        box-shadow: 32px 0 #777777, -32px 0 #FFF2;
+    }
+}
+             
 @media (max-width: 900px) {
     .login-container {
         flex-direction: column;

@@ -98,10 +98,10 @@ router.post('/', (req: express.Request, res: express.Response) => {
             // Check if the user is of type Maestro or Estudiante
             if (user.matricula.toLowerCase().startsWith('l0')) {
                 // Maestro
-                return res.send({ status: 'success', user: user as User });
+                return res.status(200).send({ status: 'success', user: user as User });
             }
             // Estudiante
-            return res.send({ status: 'success', user: user as User });
+            return res.status(200).send({ status: 'success', user: user as User });
         });
     })(req, res);
 });

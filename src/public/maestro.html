@@ -11,7 +11,8 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="./css/styles.css">
 
-    <script defer src="./js/main.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/maestro.js"></script>
     <link rel="icon" type="image/x-icon" href="./assets/favicon-180x180.png">
     <title>Lab con Barry - Alumnos</title>
 </head>
@@ -86,6 +87,7 @@
                             <ul>
                                 <!-- Display minigames completed by student -->
                             </ul>
+                            <span class="loader"></span>
                         </div>
                     </div>
                     <div class="info-col2">
@@ -95,9 +97,9 @@
                         </div>
                         <div>
                             <p class="info-title">Certificado</p>
-                            <div style="display: flex; align-items: center; gap: 5px;">
-                                <button class="certificado-btn">Visualizar</button>
-                                <button class="download-btn"><span style="padding: 0; font-size: medium;" class="material-icons">download</span></button>
+                            <div class="certificate-btns" style="display: flex; align-items: center; gap: 5px;">
+                                <a class="certificado-btn" target="_blank">Visualizar</a>
+                                <button onclick="downloadCertificado(event)" class="download-btn"><span style="padding: 0; font-size: medium;" class="material-icons">download</span></button>
                             </div>
                         </div>
                     </div>
@@ -146,41 +148,5 @@
         </div>
     </div>
     </div>
-    <script>
-        const name = document.querySelector('.user-name');
-        const studentId = document.querySelector('.user-id');
-
-        const user = JSON.parse(localStorage.getItem('user'));
-
-        name.innerText = `${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno}`;
-        studentId.innerText = user.matricula;
-
-        // Get all users from database and store them in localStorage
-        fetch('http://localhost:3000/api/alumnos').then((response) => response.json()).then((result) => {
-            localStorage.setItem('estudiantesData', JSON.stringify(result.users));
-
-            // For each user in localStorage, create a new list item
-            const alumnosContainer = document.querySelector('.alumnos-container ul');
-
-            // Sort by completion percentage.
-            result.users.sort((a, b) => {return b.progreso - a.progreso});
-
-            result.users.forEach((estudiante) => {
-                const alumno = document.createElement('li');
-                alumno.classList.add('alumno');
-                alumno.setAttribute('onclick', 'openModal(event)');
-                alumno.setAttribute('id', estudiante.matricula);
-                // Set the state to yello if the student state is false and green if it's true
-                const stateColor = estudiante.estado ? 'green' : 'orange';
-                const state = estudiante.estado ? 'Completado' : 'En Progreso';
-
-                alumno.innerHTML = `
-                    <p>${estudiante.nombre} ${estudiante.apellidoPaterno} ${estudiante.apellidoMaterno} | ${estudiante.matricula}</p>
-                    <p style="color: ${stateColor}; font-weight: bold;">${state}</p>
-                `;
-                alumnosContainer.appendChild(alumno);
-            });
-        });
-    </script>
 </body>
 </html>

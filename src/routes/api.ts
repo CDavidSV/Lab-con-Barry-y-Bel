@@ -20,7 +20,7 @@ router.get('/alumnos', async (req: express.Request, res: express.Response) => {
         const minigames = await minigamesRequest.execute('ObtenerCatalogoMinijuegos');
 
         if (!result.recordset || result.recordset.length < 1) {
-            res.send({ status: "success", size: 0, users: [] });
+            res.status(200).send({ status: "success", size: 0, users: [] });
         }
         const users: User[] = [];
         result.recordset.forEach((student) => {
@@ -37,7 +37,7 @@ router.get('/alumnos', async (req: express.Request, res: express.Response) => {
                 } as User
             );
         });
-        res.send({ status: "success", size: users.length, users: users });
+        res.status(200).send({ status: "success", size: users.length, users: users });
       } catch (error) {
         console.error("Error retrieving students:".red, error);
         res.status(500).send({ status: "error", message: "An error occurred while retrieving students." });
@@ -59,7 +59,7 @@ router.get('/certificado', async (req: express.Request, res: express.Response) =
         result = await request.execute('ObtenerCertificado');
 
         if (!result.recordset || result.recordset.length < 1) {
-            return res.status(404).send({ status: "error", message: "Certificate not found." });
+            return res.status(200).send({ status: "error", message: "Certificate not found." });
         }
     } catch (error) {
         console.error("Error retrieving certificate data:".red, error);
@@ -78,7 +78,7 @@ router.get('/certificado', async (req: express.Request, res: express.Response) =
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-    const nombre = result.recordset[0].Nombre;
+    const nombre = `${result.recordset[0].Nombre} ${result.recordset[0].ApPaterno} ${result.recordset[0].ApMaterno}`;
     const campus = result.recordset[0].Campus;
 
     ctx.fillText(nombre, 940, 415);
@@ -87,7 +87,7 @@ router.get('/certificado', async (req: express.Request, res: express.Response) =
 
     // Send the image.
     const buffer = canvas.toBuffer();
-    res.setHeader('Content-Type', 'image/jpeg');
+    res.setHeader('Content-Type', 'image/png');
     res.status(200).send(buffer);
 });
 
@@ -110,7 +110,7 @@ router.get('/alumno', async (req: express.Request, res: express.Response) => {
         minigames = await minigamesRequest.execute('ObtenerCatalogoMinijuegos');
 
         if (!result.recordset || result.recordset.length < 1) {
-            return res.send({ status: "error", message: "Student not Found." });
+            return res.status(200).send({ status: "error", message: "Student not Found." });
         }
     } catch (error) {
         console.error("Error retrieving student data:".red, error);
@@ -119,7 +119,7 @@ router.get('/alumno', async (req: express.Request, res: express.Response) => {
 
     const progressPercentage = Math.floor(result.recordset[0].Progreso / minigames.recordset.length * 100);
 
-    res.send({ status: "success", user: { 
+    res.status(200).send({ status: "success", user: { 
         matricula: result.recordset[0].Matricula,
         nombre: result.recordset[0].Nombre,
         apellidoPaterno: result.recordset[0].ApPaterno,
@@ -145,10 +145,10 @@ router.get('/alumno/minijuegos', async (req: express.Request, res: express.Respo
         const result = await request.execute('ObtenerMinijuegosPorEstudiante');
 
         if (!result.recordset || result.recordset.length < 1) {
-            return res.send({ status: "error", message: "Student not Found." });
+            return res.status(200).send({ status: "error", message: "Student not Found." });
         }
 
-        res.send({ status: "success", minigames: result.recordset });
+        res.status(200).send({ status: "success", minigames: result.recordset });
         
     } catch (error) {
         console.error("Error retrieving student data:".red, error);
@@ -169,7 +169,7 @@ router.get('/stats', async (req: express.Request, res: express.Response) => {
     const coursesInProgress = registeredStudents - completedCourses;
     const averageProgress = Math.round(resultProgress.recordset.map(progress => progress.Progreso / minigameCount * 100).reduce((a, b) => a + b, 0) / registeredStudents);
 
-    res.send({ status: "success", data: {registered: registeredStudents, completedCourses, inProgressCourses: coursesInProgress, averageProgress} as StudentStats });
+    res.status(200).send({ status: "success", data: {registered: registeredStudents, completedCourses, inProgressCourses: coursesInProgress, averageProgress} as StudentStats });
 });
 
 // Update the students minigame registry with the new started minigame.
@@ -207,7 +207,7 @@ router.post('/alumno/comenzominijuego', async (req: express.Request, res: expres
         request.input('MinijuegoId', mssql.Int, parseInt(minigameId));
         await request.execute('ActualizarMinijuegoEmpezado');
     
-        res.send({ status: "success", message: "Minigame started successfully." });
+        res.status(200).send({ status: "success", message: "Minigame started successfully." });
     } catch (error: any) {
         return res.status(500).send({ status: "error", message: "An error occurred while updating minigame status.", error: error.originalError });
     }
@@ -252,7 +252,7 @@ router.post('/alumno/terminominijuego', async (req: express.Request, res: expres
             return res.status(400).send({ status: "error", message: "The student hasn't started that minigame." });
         }
             
-        res.send({ status: "success", message: "Minigame status has been changed to completed."})
+        res.status(200).send({ status: "success", message: "Minigame status has been changed to completed."})
     } catch (error: any) {
         return res.status(500).send({ status: "error", message: "An error occurred while updating minigame status.", error: error.originalError });
     }
