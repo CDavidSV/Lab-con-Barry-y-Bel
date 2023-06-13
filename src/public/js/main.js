@@ -312,9 +312,8 @@ function fillMinigames(minigames) {
 
 // Clear session data and redirect to login page.
 function logout() {
-    // Remove user data from local storage.
-    localStorage.removeItem('user');
-    localStorage.removeItem('estudiantesData');
+    // Remove all data from local storage.
+    localStorage.clear();
 
     fetch(`${apiURL}/logout`, { method: 'GET' })
     .then(response => response.json())
