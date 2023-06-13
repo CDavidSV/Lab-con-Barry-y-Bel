@@ -17,15 +17,6 @@ function login() {
     const passwordInput = document.querySelector('#password');
     const error = document.querySelector('.error-msg');
     const submitBtn = document.querySelector('.btn');
-    const emailValue = emailInput.value;
-
-    // Eliminar texto después de '@' y convertir en mayúsculas
-    const emailWithoutDomain = emailValue.split('@').shift().toUpperCase();
-
-    const nombreCompleto = 'Nombre';
-
-    localStorage.setItem('matricula', emailWithoutDomain);
-    localStorage.setItem('nombreCompleto', nombreCompleto);
 
     const validEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
