@@ -57,7 +57,11 @@ const pool = connectToDB().then((pool) => pool);
 
 // Display main page.
 app.get('/', (req: express.Request, res: express.Response) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
+    res.sendFile(path.join(__dirname, './src/public/index.html'));
+});
+
+app.get('/nuestro_equipo', (req: express.Request, res: express.Response) => {
+   res.sendFile(path.join(__dirname, '../src/public/equipo.html')); 
 });
 
 // Logout.
