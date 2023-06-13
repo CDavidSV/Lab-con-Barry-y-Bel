@@ -15,16 +15,16 @@ window.onload = () => {
             console.error(data.message);
         }
         localStorage.setItem('user', JSON.stringify(data.user));
+
+        name.innerText = `${data.user.nombre} ${data.user.apellidoPaterno} ${data.user.apellidoMaterno}`;
+        studentId.innerText = data.user.matricula;
+    
+        // Set the progress bar and percentage to the user progress
+        progressPercentage.innerText = `${data.user.progreso}%`;
+        progressBar.style.width = `${data.user.progreso}%`;
     })
     .catch(error => {
         console.error('Error:', error);
     });
-    user = JSON.parse(localStorage.getItem('user'));
 
-    name.innerText = `${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno}`;
-    studentId.innerText = user.matricula;
-
-    // Set the progress bar and percentage to the user progress
-    progressPercentage.innerText = `${user.progreso}%`;
-    progressBar.style.width = `${user.progreso}%`;
 };
