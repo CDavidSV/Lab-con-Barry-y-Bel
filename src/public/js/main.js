@@ -213,7 +213,7 @@ async function openModal(e) {
     progressBar.style.width = `${student.progreso}%`;
     progressPercentage.innerText = `${student.progreso}%`;
 
-    viewCertificate.disabled = true;
+    viewCertificate.removeAttribute('href');
     downloadCertificate.disabled = true;
     viewCertificate.style.opacity = '0.5';
     downloadCertificate.style.opacity = '0.5';
@@ -253,7 +253,6 @@ async function openModal(e) {
             certificates[modalId] = url
             localStorage.setItem('certificates', JSON.stringify(certificates));
             
-            viewCertificate.disabled = false;
             downloadCertificate.disabled = false;
             viewCertificate.style.opacity = '1';
             downloadCertificate.style.opacity = '1';
@@ -263,7 +262,6 @@ async function openModal(e) {
     }
     viewCertificate.href = certificates[modalId];
 
-    viewCertificate.disabled = false;
     downloadCertificate.disabled = false;
     viewCertificate.style.opacity = '1';
     downloadCertificate.style.opacity = '1';
