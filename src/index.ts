@@ -12,6 +12,7 @@ import loginRoute from "./routes/login";
 import alumnoRoute from "./routes/alumno";
 import maestroRoute from "./routes/maestro";
 import apiRoute from "./routes/api";
+import reglamentoRoute from "./routes/reglamento";
 
 // Config
 dotenv.config();
@@ -49,6 +50,7 @@ app.use('/login', loginRoute);
 app.use('/alumno', alumnoRoute);
 app.use('/maestro', maestroRoute);
 app.use('/api', apiRoute);
+app.use('/reglamento', reglamentoRoute);
 
 // Connect to db.
 const pool = connectToDB().then((pool) => pool);
