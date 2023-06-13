@@ -17,15 +17,6 @@ function login() {
     const passwordInput = document.querySelector('#password');
     const error = document.querySelector('.error-msg');
     const submitBtn = document.querySelector('.btn');
-    const emailValue = emailInput.value;
-
-    // Eliminar texto después de '@' y convertir en mayúsculas
-    const emailWithoutDomain = emailValue.split('@').shift().toUpperCase();
-
-    const nombreCompleto = 'Nombre';
-
-    localStorage.setItem('matricula', emailWithoutDomain);
-    localStorage.setItem('nombreCompleto', nombreCompleto);
 
     const validEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
@@ -321,9 +312,8 @@ function fillMinigames(minigames) {
 
 // Clear session data and redirect to login page.
 function logout() {
-    // Remove user data from local storage.
-    localStorage.removeItem('user');
-    localStorage.removeItem('estudiantesData');
+    // Remove all data from local storage.
+    localStorage.clear();
 
     fetch(`${apiURL}/logout`, { method: 'GET' })
     .then(response => response.json())
