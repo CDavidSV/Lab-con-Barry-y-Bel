@@ -17,7 +17,7 @@ import apiRoute from "./routes/api";
 dotenv.config();
 colors.enable();
 const app = express();
-const port = 3000;
+const port = 8080;
 const secret = "O2TsCpfRNb9yhwPjFnLJ";
 
 // Middleware.

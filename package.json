@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --config nodemon.json ./src/index.ts",
-    "build": "tsc && xcopy /E /I src build",
-    "start": "ts-node ./build/index.js"
+    "start": "node ./dist/index.js",
+    "build": "tsc && cp -r ./src/public ./dist/public"
+
   },
   "keywords": [],
   "author": "",
