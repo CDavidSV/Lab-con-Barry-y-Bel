@@ -1,6 +1,6 @@
 function getStuddentsData() {
     // Get all users from database and store them in localStorage
-    fetch('http://localhost:3000/api/alumnos').then((response) => response.json()).then((result) => {
+    fetch('https://lab-barry-bel.azurewebsites.net/api/alumnos').then((response) => response.json()).then((result) => {
         localStorage.setItem('estudiantesData', JSON.stringify(result.users));
 
         // For each user in localStorage, create a new list item
