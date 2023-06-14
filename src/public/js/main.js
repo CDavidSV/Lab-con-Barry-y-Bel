@@ -1,5 +1,5 @@
 // Variables
-const apiURL = "https://lab-barry-bel.azurewebsites.net/";
+const apiURL = "https://lab-barry-bel.azurewebsites.net";
 let menuOpen = false;
 let selectedModalId = "";
 
