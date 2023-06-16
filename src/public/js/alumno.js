@@ -6,10 +6,6 @@ window.onload = () => {
 
     let user = JSON.parse(localStorage.getItem('user'));
 
-    name.innerText = `${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno}`;
-    studentId.innerText = user.matricula;
-
-
     fetch(`${apiURL}/api/alumno?matricula=${user.matricula}`, {
         method: 'GET',
     })
@@ -19,7 +15,10 @@ window.onload = () => {
             console.error(data.message);
         }
         localStorage.setItem('user', JSON.stringify(data.user));
-        
+
+        name.innerText = `${data.user.nombre} ${data.user.apellidoPaterno} ${data.user.apellidoMaterno}`;
+        studentId.innerText = data.user.matricula;
+    
         // Set the progress bar and percentage to the user progress
         progressPercentage.innerText = `${data.user.progreso}%`;
         progressBar.style.width = `${data.user.progreso}%`;
